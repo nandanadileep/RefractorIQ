@@ -1,0 +1,13 @@
+radon
+cloc
+requests
+fastapi
+uvicorn[standard]
+gitpython
+python-dotenv
+tree-sitter
+tree-sitter-python
+tree-sitter-javascript
+tree-sitter-java
+networkx
+
