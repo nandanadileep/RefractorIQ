@@ -20,7 +20,7 @@ import shutil
 from dotenv import load_dotenv
 
 load_dotenv()
-app = FastAPI()
+
 
 CLIENT_ID = os.getenv("GITHUB_CLIENT_ID")
 CLIENT_SECRET = os.getenv("GITHUB_CLIENT_SECRET")
@@ -30,6 +30,21 @@ REPO_TO_ANALYZE = os.getenv("REPO_TO_ANALYZE", "https://github.com/emcie-co/parl
 
 # Cache for temporary directories (to avoid re-cloning for multiple endpoints)
 _repo_cache = {}
+
+
+from fastapi.middleware.cors import CORSMiddleware
+
+# Add this right after creating the FastAPI app
+app = FastAPI()
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # In production, replace with specific origins
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 def get_or_clone_repo(repo_url: str = None):
     """Clone repo or return cached directory"""

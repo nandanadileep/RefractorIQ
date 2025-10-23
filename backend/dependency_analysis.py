@@ -121,9 +121,10 @@ def extract_functions_and_classes(tree, content, language_type):
     entities = {'functions': [], 'classes': []}
     
     def traverse(node):
-        # Functions
+        # Functions - use same list as analysis.py
         if node.type in ['function_definition', 'function_declaration', 'method_definition', 
-                        'method_declaration', 'arrow_function']:
+                        'method_declaration', 'arrow_function', 'constructor_declaration',
+                        'function', 'method']:  # Added missing types
             name = None
             for child in node.children:
                 if child.type in ['identifier', 'property_identifier']:
