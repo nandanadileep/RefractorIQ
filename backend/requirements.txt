@@ -1,7 +1,0 @@
-fastapi
-uvicorn
-python-dotenv
-gitpython
-radon
-cloc
-requests
