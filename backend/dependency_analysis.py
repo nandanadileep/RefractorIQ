@@ -12,6 +12,40 @@ PY_LANGUAGE = Language(tspython.language())
 JS_LANGUAGE = Language(tsjavascript.language())
 JAVA_LANGUAGE = Language(tsjava.language())
 
+# Common third-party library directories to exclude
+THIRD_PARTY_DIRS = {
+    'node_modules',
+    'venv',
+    'env',
+    '.env',
+    'virtualenv',
+    'site-packages',
+    'dist-packages',
+    '__pycache__',
+    '.venv',
+    'vendor',
+    'bower_components',
+    'target',  # Maven
+    'build',
+    'dist',
+    '.gradle',
+    'lib',
+    'libs',
+    'packages',  # NuGet
+}
+
+def is_third_party_file(filepath, repo_path):
+    """Check if a file is in a third-party directory"""
+    rel_path = os.path.relpath(filepath, repo_path)
+    path_parts = rel_path.split(os.sep)
+    
+    # Check if any part of the path matches third-party directories
+    for part in path_parts:
+        if part in THIRD_PARTY_DIRS:
+            return True
+    
+    return False
+
 def get_parser_and_language(file_extension):
     """Get appropriate parser and language based on file extension"""
     if file_extension == ".py":
@@ -148,7 +182,7 @@ def extract_functions_and_classes(tree, content, language_type):
     traverse(tree.root_node)
     return entities
 
-def build_dependency_graph(repo_path):
+def build_dependency_graph(repo_path, exclude_third_party=True):
     """Build a comprehensive dependency graph using networkx"""
     G = nx.DiGraph()
     file_data = {}
@@ -159,6 +193,11 @@ def build_dependency_graph(repo_path):
             ext = os.path.splitext(file)[1]
             if ext in [".py", ".js", ".ts", ".java"]:
                 filepath = os.path.join(root, file)
+                
+                # Skip third-party files if requested
+                if exclude_third_party and is_third_party_file(filepath, repo_path):
+                    continue
+                
                 rel_path = os.path.relpath(filepath, repo_path)
                 
                 parser, language = get_parser_and_language(ext)
@@ -228,9 +267,9 @@ def build_dependency_graph(repo_path):
     
     return G, file_data
 
-def analyze_dependencies(repo_path):
+def analyze_dependencies(repo_path, exclude_third_party=True):
     """Analyze dependencies and return metrics"""
-    G, file_data = build_dependency_graph(repo_path)
+    G, file_data = build_dependency_graph(repo_path, exclude_third_party)
     
     # Calculate metrics
     total_files = sum(1 for node in G.nodes() if G.nodes[node].get('type') == 'file')
@@ -279,9 +318,9 @@ def analyze_dependencies(repo_path):
         "graph_density": round(nx.density(G), 4) if G.nodes() else 0
     }
 
-def get_file_dependencies(repo_path, file_path):
+def get_file_dependencies(repo_path, file_path, exclude_third_party=True):
     """Get detailed dependencies for a specific file"""
-    G, file_data = build_dependency_graph(repo_path)
+    G, file_data = build_dependency_graph(repo_path, exclude_third_party)
     
     if file_path not in file_data:
         return None
@@ -315,9 +354,9 @@ def get_file_dependencies(repo_path, file_path):
         "dependents": dependents
     }
 
-def export_graph_data(repo_path, format='json'):
+def export_graph_data(repo_path, format='json', exclude_third_party=True):
     """Export graph in various formats for visualization"""
-    G, file_data = build_dependency_graph(repo_path)
+    G, file_data = build_dependency_graph(repo_path, exclude_third_party)
     
     if format == 'json':
         # Convert to JSON-serializable format

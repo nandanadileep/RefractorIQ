@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Github, AlertCircle, CheckCircle, TrendingUp, GitBranch, FileCode, Zap, Info } from 'lucide-react';
+import { Search, Github, AlertCircle, CheckCircle, TrendingUp, GitBranch, FileCode, Zap, Info, Package } from 'lucide-react';
 
 // Metric definitions and explanations
 const METRIC_INFO = {
@@ -62,13 +62,17 @@ const METRIC_INFO = {
     title: "Circular Dependencies",
     description: "Number of circular dependency chains detected where files depend on each other in a cycle.",
     interpretation: "0 is ideal. Any circular dependencies should be refactored to prevent maintenance issues."
+  },
+  excludeThirdParty: {
+    title: "Exclude Third-Party Libraries",
+    description: "When enabled, excludes common third-party library directories (node_modules, venv, site-packages, vendor, etc.) from all analysis metrics.",
+    interpretation: "Enable this to focus on your own code quality. Disable to see the complete codebase including dependencies. Recommended: Enable for meaningful project metrics."
   }
 };
 
 function Tooltip({ info, children, position = 'right' }) {
   const [show, setShow] = useState(false);
 
-  // Determine tooltip position based on screen location
   const getPositionClasses = () => {
     if (position === 'left') {
       return 'right-full mr-3 top-1/2 -translate-y-1/2';
@@ -111,6 +115,7 @@ export default function RefractorIQDashboard() {
   const [analysisData, setAnalysisData] = useState(null);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('metrics');
+  const [excludeThirdParty, setExcludeThirdParty] = useState(true);
 
   const BACKEND_URL = 'https://fluffy-fortnight-pjr95546qg936qrg-8000.app.github.dev';
 
@@ -126,7 +131,7 @@ export default function RefractorIQDashboard() {
 
     try {
       const response = await fetch(
-        `${BACKEND_URL}/analyze/full?repo_url=${encodeURIComponent(repoUrl)}`
+        `${BACKEND_URL}/analyze/full?repo_url=${encodeURIComponent(repoUrl)}&exclude_third_party=${excludeThirdParty}`
       );
       
       if (!response.ok) {
@@ -157,7 +162,6 @@ export default function RefractorIQDashboard() {
   };
 
   const normalizeValue = (value, metricKey) => {
-    // Add normalization logic for different metrics
     if (metricKey === 'loc' && value > 1000) {
       return `${(value / 1000).toFixed(1)}K`;
     }
@@ -184,7 +188,7 @@ export default function RefractorIQDashboard() {
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Search Section */}
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-6">
-          <div className="flex gap-3">
+          <div className="flex gap-3 mb-4">
             <div className="flex-1 relative">
               <Github className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
               <input
@@ -214,6 +218,30 @@ export default function RefractorIQDashboard() {
               )}
             </button>
           </div>
+
+          {/* Third-Party Toggle */}
+          <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-lg border border-slate-200">
+            <label className="flex items-center gap-3 cursor-pointer flex-1">
+              <div className="relative">
+                <input
+                  type="checkbox"
+                  checked={excludeThirdParty}
+                  onChange={(e) => setExcludeThirdParty(e.target.checked)}
+                  className="sr-only peer"
+                />
+                <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Package className="w-5 h-5 text-slate-600" />
+                <span className="text-sm font-medium text-slate-700">
+                  Exclude Third-Party Libraries
+                </span>
+              </div>
+            </label>
+            <Tooltip info={METRIC_INFO.excludeThirdParty} position="left">
+              <Info className="w-5 h-5 text-slate-400 hover:text-slate-600 transition-colors cursor-help" />
+            </Tooltip>
+          </div>
           
           {error && (
             <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3">
@@ -228,11 +256,21 @@ export default function RefractorIQDashboard() {
           <div className="space-y-6">
             {/* Repository Info */}
             <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-              <div className="flex items-center gap-3 mb-2">
-                <CheckCircle className="w-6 h-6 text-green-600" />
-                <h2 className="text-xl font-bold text-slate-800">Analysis Complete</h2>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="w-6 h-6 text-green-600" />
+                  <div>
+                    <h2 className="text-xl font-bold text-slate-800">Analysis Complete</h2>
+                    <p className="text-slate-600 break-all">{analysisData.repository}</p>
+                  </div>
+                </div>
+                {analysisData.excluded_third_party && (
+                  <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-lg">
+                    <Package className="w-4 h-4 text-blue-600" />
+                    <span className="text-xs font-medium text-blue-700">Third-party excluded</span>
+                  </div>
+                )}
               </div>
-              <p className="text-slate-600 break-all">{analysisData.repository}</p>
             </div>
 
             {/* Tabs */}
@@ -395,8 +433,6 @@ export default function RefractorIQDashboard() {
                       />
                     </div>
 
-                    {/* External Dependencies - removed from here since it's now in the main grid */}
-
                     {/* Most Dependent Files */}
                     {analysisData.dependency_metrics.most_dependent_files.length > 0 && (
                       <div className="bg-slate-50 rounded-lg p-5 border border-slate-200">
@@ -504,4 +540,3 @@ function ComplexityBar({ label, value, total, color }) {
     </div>
   );
 }
-

@@ -10,6 +10,43 @@ PY_LANGUAGE = Language(tspython.language())
 JS_LANGUAGE = Language(tsjavascript.language())
 JAVA_LANGUAGE = Language(tsjava.language())
 
+# Common third-party library directories to exclude
+THIRD_PARTY_DIRS = {
+    'node_modules',
+    'venv',
+    'env',
+    '.env',
+    'virtualenv',
+    'site-packages',
+    'dist-packages',
+    '__pycache__',
+    '.venv',
+    'vendor',
+    'bower_components',
+    'target',
+    'build',
+    'dist',
+    '.gradle',
+    'lib',
+    'libs',
+    'packages',
+}
+
+def is_third_party_file(filepath, repo_path):
+    """Check if a file is in a third-party directory"""
+    try:
+        rel_path = os.path.relpath(filepath, repo_path)
+        path_parts = rel_path.split(os.sep)
+        
+        # Check if any part of the path matches third-party directories
+        for part in path_parts:
+            if part in THIRD_PARTY_DIRS:
+                return True
+        
+        return False
+    except Exception:
+        return False
+
 def get_parser_and_language(file_extension):
     """Get appropriate parser and language based on file extension"""
     if file_extension == ".py":
@@ -21,7 +58,7 @@ def get_parser_and_language(file_extension):
     else:
         return None, None
 
-def count_todos(repo_path):
+def count_todos(repo_path, exclude_third_party=True):
     """Count TODO, FIXME, HACK comments using AST parsing"""
     todos = 0
     for root, _, files in os.walk(repo_path):
@@ -29,6 +66,11 @@ def count_todos(repo_path):
             ext = os.path.splitext(file)[1]
             if ext in [".py", ".js", ".ts", ".java"]:
                 filepath = os.path.join(root, file)
+                
+                # Skip third-party files if requested
+                if exclude_third_party and is_third_party_file(filepath, repo_path):
+                    continue
+                
                 parser, language = get_parser_and_language(ext)
                 if not parser:
                     continue
@@ -60,7 +102,7 @@ def count_todos(repo_path):
                         pass
     return todos
 
-def count_loc(repo_path):
+def count_loc(repo_path, exclude_third_party=True):
     """Count lines of code (excluding comments and blank lines) using AST"""
     loc = 0
     for root, _, files in os.walk(repo_path):
@@ -68,6 +110,11 @@ def count_loc(repo_path):
             ext = os.path.splitext(file)[1]
             if ext in [".py", ".js", ".ts", ".java"]:
                 filepath = os.path.join(root, file)
+                
+                # Skip third-party files if requested
+                if exclude_third_party and is_third_party_file(filepath, repo_path):
+                    continue
+                
                 parser, language = get_parser_and_language(ext)
                 
                 try:
@@ -128,7 +175,7 @@ def calculate_cyclomatic_complexity(node, content):
     traverse(node)
     return complexity
 
-def analyze_functions(repo_path):
+def analyze_functions(repo_path, exclude_third_party=True):
     """Analyze all functions in the repository - single pass for efficiency"""
     results = {
         "complexities": [],
@@ -137,10 +184,10 @@ def analyze_functions(repo_path):
         "min_complexity": float('inf'),
         "files_analyzed": 0,
         "complexity_distribution": {
-            "low": 0,      # 1-5
-            "medium": 0,   # 6-10
-            "high": 0,     # 11-20
-            "very_high": 0 # 21+
+            "low": 0,
+            "medium": 0,
+            "high": 0,
+            "very_high": 0
         }
     }
     
@@ -149,6 +196,11 @@ def analyze_functions(repo_path):
             ext = os.path.splitext(file)[1]
             if ext in [".py", ".js", ".ts", ".java"]:
                 filepath = os.path.join(root, file)
+                
+                # Skip third-party files if requested
+                if exclude_third_party and is_third_party_file(filepath, repo_path):
+                    continue
+                
                 parser, language = get_parser_and_language(ext)
                 
                 if not parser:
@@ -164,11 +216,9 @@ def analyze_functions(repo_path):
                     # Find all function-like nodes by traversing the tree
                     def find_functions(node):
                         functions = []
-                        # Use shared FUNCTION_NODE_TYPES constant
                         if node.type in FUNCTION_NODE_TYPES:
                             functions.append(node)
                         
-                        # Recursively check children
                         for child in node.children:
                             functions.extend(find_functions(child))
                         
@@ -184,7 +234,7 @@ def analyze_functions(repo_path):
                         if complexity > 0:
                             results["min_complexity"] = min(results["min_complexity"], complexity)
                         
-                        # Categorize complexity using shared thresholds
+                        # Categorize complexity
                         if complexity <= COMPLEXITY_THRESHOLDS['low'][1]:
                             results["complexity_distribution"]["low"] += 1
                         elif complexity <= COMPLEXITY_THRESHOLDS['medium'][1]:
@@ -195,16 +245,16 @@ def analyze_functions(repo_path):
                             results["complexity_distribution"]["very_high"] += 1
                         
                 except Exception as e:
-                    pass  # Skip files that can't be parsed
+                    pass
     
     if results["min_complexity"] == float('inf'):
         results["min_complexity"] = 0
     
     return results
 
-def avg_cyclomatic_complexity(repo_path):
+def avg_cyclomatic_complexity(repo_path, exclude_third_party=True):
     """Calculate average cyclomatic complexity using AST parsing"""
-    results = analyze_functions(repo_path)
+    results = analyze_functions(repo_path, exclude_third_party)
     if results["complexities"]:
         return round(sum(results["complexities"]) / len(results["complexities"]), 2)
     return 0
@@ -213,9 +263,9 @@ def simple_debt_score(loc, todos, complexity):
     """Calculate technical debt score"""
     return round((todos * 5 + complexity * 2 + loc / 1000), 2)
 
-def get_detailed_metrics(repo_path):
+def get_detailed_metrics(repo_path, exclude_third_party=True):
     """Get detailed code metrics including function count, max complexity, etc."""
-    results = analyze_functions(repo_path)
+    results = analyze_functions(repo_path, exclude_third_party)
     return {
         "total_functions": results["total_functions"],
         "max_complexity": results["max_complexity"],
@@ -223,3 +273,4 @@ def get_detailed_metrics(repo_path):
         "files_analyzed": results["files_analyzed"],
         "complexity_distribution": results["complexity_distribution"]
     }
+

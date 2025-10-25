@@ -101,12 +101,17 @@ def callback(code: str):
     return JSONResponse({"access_token": access_token})
 
 @app.get("/analyze")
-def analyze(repo_url: str = None, debug: bool = False):
+def analyze(
+    repo_url: str = None, 
+    debug: bool = False,
+    exclude_third_party: bool = Query(True, description="Exclude third-party libraries from analysis")
+):
     """
     Analyze a GitHub repository using Tree-sitter AST parsing
     Query params: 
         - repo_url (optional): if not provided, uses REPO_TO_ANALYZE from env
         - debug (optional): if true, includes additional debug information
+        - exclude_third_party (optional): if true, excludes node_modules, venv, etc.
     """
     tmpdir = None
     cleanup = True
@@ -118,11 +123,11 @@ def analyze(repo_url: str = None, debug: bool = False):
         cleanup = False  # Don't cleanup if using cache
         
         # Compute metrics using Tree-sitter
-        loc = count_loc(tmpdir)
-        todos = count_todos(tmpdir)
-        complexity = avg_cyclomatic_complexity(tmpdir)
+        loc = count_loc(tmpdir, exclude_third_party)
+        todos = count_todos(tmpdir, exclude_third_party)
+        complexity = avg_cyclomatic_complexity(tmpdir, exclude_third_party)
         debt = simple_debt_score(loc, todos, complexity)
-        detailed = get_detailed_metrics(tmpdir)
+        detailed = get_detailed_metrics(tmpdir, exclude_third_party)
         
         response = {
             "repository": target_repo,
@@ -137,7 +142,8 @@ def analyze(repo_url: str = None, debug: bool = False):
                 "FilesAnalyzed": detailed["files_analyzed"],
                 "ComplexityDistribution": detailed["complexity_distribution"]
             },
-            "analysis_method": "Tree-sitter AST parsing"
+            "analysis_method": "Tree-sitter AST parsing",
+            "excluded_third_party": exclude_third_party
         }
         
         if debug:
@@ -158,23 +164,28 @@ def analyze(repo_url: str = None, debug: bool = False):
         )
 
 @app.get("/analyze/dependencies")
-def analyze_deps(repo_url: str = None):
+def analyze_deps(
+    repo_url: str = None,
+    exclude_third_party: bool = Query(True, description="Exclude third-party libraries from analysis")
+):
     """
     Analyze repository dependencies and return dependency graph metrics
     Query params: 
         - repo_url (optional): if not provided, uses REPO_TO_ANALYZE from env
+        - exclude_third_party (optional): if true, excludes node_modules, venv, etc.
     """
     try:
         target_repo = repo_url if repo_url else REPO_TO_ANALYZE
         tmpdir = get_or_clone_repo(target_repo)
         
         # Analyze dependencies
-        dep_metrics = analyze_dependencies(tmpdir)
+        dep_metrics = analyze_dependencies(tmpdir, exclude_third_party)
         
         response = {
             "repository": target_repo,
             "dependency_metrics": dep_metrics,
-            "analysis_method": "NetworkX graph analysis with Tree-sitter"
+            "analysis_method": "NetworkX graph analysis with Tree-sitter",
+            "excluded_third_party": exclude_third_party
         }
         
         return JSONResponse(response)
@@ -188,20 +199,22 @@ def analyze_deps(repo_url: str = None):
 @app.get("/analyze/file-dependencies")
 def file_deps(
     file_path: str = Query(..., description="Relative path to file in repository"),
-    repo_url: str = None
+    repo_url: str = None,
+    exclude_third_party: bool = Query(True, description="Exclude third-party libraries from analysis")
 ):
     """
     Get detailed dependency information for a specific file
     Query params:
         - file_path (required): Relative path to the file (e.g., 'src/main.py')
         - repo_url (optional): if not provided, uses REPO_TO_ANALYZE from env
+        - exclude_third_party (optional): if true, excludes node_modules, venv, etc.
     """
     try:
         target_repo = repo_url if repo_url else REPO_TO_ANALYZE
         tmpdir = get_or_clone_repo(target_repo)
         
         # Get file dependencies
-        file_dep_data = get_file_dependencies(tmpdir, file_path)
+        file_dep_data = get_file_dependencies(tmpdir, file_path, exclude_third_party)
         
         if file_dep_data is None:
             return JSONResponse(
@@ -212,7 +225,8 @@ def file_deps(
         response = {
             "repository": target_repo,
             "file_dependencies": file_dep_data,
-            "analysis_method": "Tree-sitter + NetworkX"
+            "analysis_method": "Tree-sitter + NetworkX",
+            "excluded_third_party": exclude_third_party
         }
         
         return JSONResponse(response)
@@ -226,20 +240,22 @@ def file_deps(
 @app.get("/analyze/dependency-graph")
 def dependency_graph(
     repo_url: str = None,
-    format: str = Query("json", description="Export format: 'json' or 'gexf'")
+    format: str = Query("json", description="Export format: 'json' or 'gexf'"),
+    exclude_third_party: bool = Query(True, description="Exclude third-party libraries from analysis")
 ):
     """
     Export the complete dependency graph for visualization
     Query params:
         - repo_url (optional): if not provided, uses REPO_TO_ANALYZE from env
         - format (optional): 'json' (default) for JSON format, 'gexf' for Gephi format
+        - exclude_third_party (optional): if true, excludes node_modules, venv, etc.
     """
     try:
         target_repo = repo_url if repo_url else REPO_TO_ANALYZE
         tmpdir = get_or_clone_repo(target_repo)
         
         # Export graph data
-        graph_data = export_graph_data(tmpdir, format=format)
+        graph_data = export_graph_data(tmpdir, format, exclude_third_party)
         
         if graph_data is None:
             return JSONResponse(
@@ -258,7 +274,8 @@ def dependency_graph(
         response = {
             "repository": target_repo,
             "graph": graph_data,
-            "format": format
+            "format": format,
+            "excluded_third_party": exclude_third_party
         }
         
         return JSONResponse(response)
@@ -270,25 +287,76 @@ def dependency_graph(
         )
 
 @app.get("/analyze/full")
-def full_analysis(repo_url: str = None):
+def full_analysis(
+    repo_url: str = None,
+    exclude_third_party: bool = Query(True, description="Exclude third-party libraries from analysis")
+):
     """
     Perform complete analysis including code metrics and dependencies
     Query params:
         - repo_url (optional): if not provided, uses REPO_TO_ANALYZE from env
+        - exclude_third_party (optional): if true, excludes node_modules, venv, etc.
     """
     try:
         target_repo = repo_url if repo_url else REPO_TO_ANALYZE
         tmpdir = get_or_clone_repo(target_repo)
         
-        # Code metrics
-        loc = count_loc(tmpdir)
-        todos = count_todos(tmpdir)
-        complexity = avg_cyclomatic_complexity(tmpdir)
+        # Code metrics with error handling
+        try:
+            loc = count_loc(tmpdir, exclude_third_party)
+        except Exception as e:
+            print(f"Error in count_loc: {str(e)}")
+            loc = 0
+            
+        try:
+            todos = count_todos(tmpdir, exclude_third_party)
+        except Exception as e:
+            print(f"Error in count_todos: {str(e)}")
+            todos = 0
+            
+        try:
+            complexity = avg_cyclomatic_complexity(tmpdir, exclude_third_party)
+        except Exception as e:
+            print(f"Error in avg_cyclomatic_complexity: {str(e)}")
+            complexity = 0
+            
         debt = simple_debt_score(loc, todos, complexity)
-        detailed = get_detailed_metrics(tmpdir)
         
-        # Dependency metrics
-        dep_metrics = analyze_dependencies(tmpdir)
+        try:
+            detailed = get_detailed_metrics(tmpdir, exclude_third_party)
+        except Exception as e:
+            print(f"Error in get_detailed_metrics: {str(e)}")
+            detailed = {
+                "total_functions": 0,
+                "max_complexity": 0,
+                "min_complexity": 0,
+                "files_analyzed": 0,
+                "complexity_distribution": {
+                    "low": 0,
+                    "medium": 0,
+                    "high": 0,
+                    "very_high": 0
+                }
+            }
+        
+        # Dependency metrics with error handling
+        try:
+            dep_metrics = analyze_dependencies(tmpdir, exclude_third_party)
+        except Exception as e:
+            print(f"Error in analyze_dependencies: {str(e)}")
+            dep_metrics = {
+                "total_files": 0,
+                "total_functions": 0,
+                "total_classes": 0,
+                "total_external_dependencies": 0,
+                "total_edges": 0,
+                "average_connections_per_node": 0,
+                "most_dependent_files": [],
+                "most_depended_on_files": [],
+                "circular_dependencies": 0,
+                "circular_dependency_chains": [],
+                "graph_density": 0
+            }
         
         response = {
             "repository": target_repo,
@@ -304,14 +372,18 @@ def full_analysis(repo_url: str = None):
                 "ComplexityDistribution": detailed["complexity_distribution"]
             },
             "dependency_metrics": dep_metrics,
-            "analysis_method": "Tree-sitter AST + NetworkX graph analysis"
+            "analysis_method": "Tree-sitter AST + NetworkX graph analysis",
+            "excluded_third_party": exclude_third_party
         }
         
         return JSONResponse(response)
     
     except Exception as e:
+        import traceback
+        error_details = traceback.format_exc()
+        print(f"Full analysis failed: {error_details}")
         return JSONResponse(
-            {"error": f"Full analysis failed: {str(e)}"}, 
+            {"error": f"Full analysis failed: {str(e)}", "details": error_details}, 
             status_code=500
         )
 
@@ -354,5 +426,4 @@ def root():
             "/health": "Health check"
         }
     })
-
 
