@@ -10,4 +10,5 @@ tree-sitter-python
 tree-sitter-javascript
 tree-sitter-java
 networkx
-
+datasketch
+simhash

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Search, Github, AlertCircle, CheckCircle, TrendingUp, GitBranch, FileCode, Zap, Info, Package, TestTube } from 'lucide-react';
+// --- NEW --- (Added CopyCheck icon)
+import { Search, Github, AlertCircle, CheckCircle, TrendingUp, GitBranch, FileCode, Zap, Info, Package, TestTube, CopyCheck } from 'lucide-react';
 
 // Metric definitions and explanations
 const METRIC_INFO = {
@@ -68,11 +69,22 @@ const METRIC_INFO = {
     description: "When enabled, excludes common third-party library directories (node_modules, venv, site-packages, vendor, etc.) from analysis. On the 'Dependencies' tab, this also hides externally imported libraries.",
     interpretation: "Enable to focus on your code. Note: Most repos .gitignore these folders, so 'Code Metrics' (like LOC) may not change. The 'Dependencies' tab will still update to hide/show external imports."
   },
-  // --- NEW ---
   excludeTests: {
     title: "Exclude Test Files",
     description: "When enabled, excludes files matching common test patterns (e.g., _test.py, .spec.js, test_*, tests/) from all analysis.",
     interpretation: "Enable this to focus on your application's production code and get a cleaner dependency graph. Disable to include tests in the metrics."
+  },
+  // --- NEW ---
+  duplicatePairs: {
+    title: "Duplicate Pairs Found",
+    description: "Number of pairs of files found that are considered duplicates based on content similarity (default threshold: 85%).",
+    interpretation: "Uses MinHash (datasketch) to find Jaccard similarity. High numbers of duplicates can indicate copy-paste code and poor abstraction."
+  },
+  // --- NEW ---
+  duplicationFilesAnalyzed: {
+    title: "Files Analyzed for Duplication",
+    description: "Number of files processed by the duplication engine.",
+    interpretation: "This number may match 'Files Analyzed' in Code Metrics, depending on exclusions."
   }
 };
 
@@ -122,7 +134,7 @@ export default function RefractorIQDashboard() {
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('metrics');
   const [excludeThirdParty, setExcludeThirdParty] = useState(true);
-  const [excludeTests, setExcludeTests] = useState(true); // --- NEW STATE ---
+  const [excludeTests, setExcludeTests] = useState(true);
 
   const BACKEND_URL = 'https://fluffy-fortnight-pjr95546qg936qrg-8000.app.github.dev';
 
@@ -137,13 +149,14 @@ export default function RefractorIQDashboard() {
     setAnalysisData(null);
 
     try {
-      // --- UPDATED FETCH URL ---
+      // Fetch URL calls /analyze/full, which now includes duplication_metrics
       const response = await fetch(
         `${BACKEND_URL}/analyze/full?repo_url=${encodeURIComponent(repoUrl)}&exclude_third_party=${excludeThirdParty}&exclude_tests=${excludeTests}`
       );
       
       if (!response.ok) {
-        throw new Error('Analysis failed');
+        const errData = await response.json();
+        throw new Error(errData.error || 'Analysis failed');
       }
 
       const data = await response.json();
@@ -170,6 +183,7 @@ export default function RefractorIQDashboard() {
   };
 
   const normalizeValue = (value, metricKey) => {
+    if (value === undefined || value === null) return 'N/A';
     if (metricKey === 'loc' && value > 1000) {
       return `${(value / 1000).toFixed(1)}K`;
     }
@@ -253,7 +267,7 @@ export default function RefractorIQDashboard() {
               </Tooltip>
             </div>
             
-            {/* --- NEW TEST FILE TOGGLE --- */}
+            {/* Test File Toggle */}
             <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-lg border border-slate-200">
               <label className="flex items-center gap-3 cursor-pointer flex-1">
                 <div className="relative">
@@ -299,7 +313,6 @@ export default function RefractorIQDashboard() {
                     <p className="text-slate-600 break-all">{analysisData.repository}</p>
                   </div>
                 </div>
-                {/* --- UPDATED TO SHOW BOTH TOGGLE STATES --- */}
                 <div className="flex flex-col items-end gap-1">
                   {analysisData.excluded_third_party && (
                     <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-lg">
@@ -317,7 +330,7 @@ export default function RefractorIQDashboard() {
               </div>
             </div>
 
-            {/* Tabs */}
+            {/* --- NEW TABS --- */}
             <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
               <div className="flex border-b border-slate-200">
                 <button
@@ -339,6 +352,17 @@ export default function RefractorIQDashboard() {
                   }`}
                 >
                   Dependencies
+                </button>
+                {/* --- NEW DUPLICATION TAB BUTTON --- */}
+                <button
+                  onClick={() => setActiveTab('duplication')}
+                  className={`flex-1 px-6 py-4 font-medium transition-colors ${
+                    activeTab === 'duplication'
+                      ? 'bg-blue-50 text-blue-600 border-b-2 border-blue-600'
+                      : 'text-slate-600 hover:bg-slate-50'
+                  }`}
+                >
+                  Duplication
                 </button>
               </div>
 
@@ -512,6 +536,66 @@ export default function RefractorIQDashboard() {
                     )}
                   </div>
                 )}
+                
+                {/* --- NEW DUPLICATION TAB PANEL --- */}
+                {activeTab === 'duplication' && (
+                  <div className="space-y-6">
+                    {/* Duplication Stats */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                      <MetricCard
+                        icon={<CopyCheck className="w-5 h-5" />}
+                        label="Duplicate Pairs Found"
+                        value={analysisData.duplication_metrics?.duplicate_pairs_found ?? 'N/A'}
+                        color="yellow"
+                        info={METRIC_INFO.duplicatePairs}
+                      />
+                      <MetricCard
+                        icon={<FileCode className="w-5 h-5" />}
+                        label="Files Analyzed"
+                        value={analysisData.duplication_metrics?.files_analyzed ?? 'N/A'}
+                        color="blue"
+                        info={METRIC_INFO.duplicationFilesAnalyzed}
+                      />
+                    </div>
+                    
+                    {/* Error Display */}
+                    {analysisData.duplication_metrics?.error && (
+                      <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3">
+                        <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+                        <p className="text-red-800">
+                          Duplication analysis failed: {analysisData.duplication_metrics.error}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Duplicate Pairs List */}
+                    {(analysisData.duplication_metrics?.duplicates?.length ?? 0) > 0 && (
+                      <div className="bg-slate-50 rounded-lg p-5 border border-slate-200">
+                        <h3 className="font-semibold text-slate-800 mb-4">
+                          Duplicate File Pairs (Threshold: {analysisData.duplication_metrics.similarity_threshold * 100}%)
+                        </h3>
+                        <div className="space-y-2">
+                          {analysisData.duplication_metrics.duplicates.map((item, idx) => (
+                            <DuplicatePairRow key={idx} item={item} />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* No Duplicates Found Message */}
+                    {(!analysisData.duplication_metrics || analysisData.duplication_metrics?.duplicates?.length === 0) && !analysisData.duplication_metrics?.error && (
+                      <div className="text-center p-6 bg-slate-50 rounded-lg border border-slate-200">
+                        <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-3" />
+                        <h4 className="font-semibold text-slate-700">No Duplicates Found</h4>
+                        <p className="text-sm text-slate-500">
+                          No file pairs met the {analysisData.duplication_metrics.similarity_threshold * 100}% similarity threshold.
+                        </p>
+                      </div>
+                    )}
+
+                  </div>
+                )}
+
               </div>
             </div>
           </div>
@@ -580,6 +664,30 @@ function ComplexityBar({ label, value, total, color }) {
           className={`${color} h-2 rounded-full transition-all`}
           style={{ width: `${percentage}%` }}
         />
+      </div>
+    </div>
+  );
+}
+
+// --- NEW COMPONENT ---
+// Renders a single row for a duplicate pair
+function DuplicatePairRow({ item }) {
+  const similarityPercentage = (item.similarity * 100).toFixed(1);
+  let colorClass = 'bg-yellow-100 text-yellow-800';
+  if (item.similarity > 0.95) {
+    colorClass = 'bg-red-100 text-red-800';
+  }
+
+  return (
+    <div className="p-3 bg-white rounded border border-slate-200">
+      <div className="flex justify-between items-center mb-2">
+        <span className="text-sm text-slate-700 font-mono truncate flex-1">{item.file_a}</span>
+        <span className={`ml-3 px-3 py-1 ${colorClass} rounded-full text-sm font-medium`}>
+          {similarityPercentage}%
+        </span>
+      </div>
+      <div className="flex justify-between items-center">
+        <span className="text-sm text-slate-700 font-mono truncate flex-1">{item.file_b}</span>
       </div>
     </div>
   );

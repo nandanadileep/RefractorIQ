@@ -13,6 +13,8 @@ from dependency_analysis import (
     get_file_dependencies,
     export_graph_data
 )
+# --- NEW IMPORT ---
+from deduplication import analyze_duplicates_minhash
 import os
 import requests
 import tempfile
@@ -302,6 +304,50 @@ def dependency_graph(
             status_code=500
         )
 
+# --- NEW ENDPOINT ---
+@app.get("/analyze/duplicates")
+def analyze_duplication(
+    repo_url: str = None,
+    threshold: float = Query(0.85, description="Jaccard similarity threshold (0.0 to 1.0)"),
+    exclude_third_party: bool = Query(True, description="Exclude third-party libraries"),
+    exclude_tests: bool = Query(True, description="Exclude test files")
+):
+    """
+    Analyze code duplication using MinHash + LSH
+    Query params:
+        - repo_url (optional): if not provided, uses REPO_TO_ANALYZE from env
+        - threshold (optional): Similarity threshold, default 0.85
+        - exclude_third_party (optional): if true, excludes node_modules, venv, etc.
+        - exclude_tests (optional): if true, excludes test files
+    """
+    try:
+        target_repo = repo_url if repo_url else REPO_TO_ANALYZE
+        tmpdir = get_or_clone_repo(target_repo)
+        
+        # Run deduplication analysis
+        duplication_metrics = analyze_duplicates_minhash(
+            tmpdir, 
+            exclude_third_party, 
+            exclude_tests,
+            threshold=threshold
+        )
+        
+        response = {
+            "repository": target_repo,
+            "duplication_metrics": duplication_metrics,
+            "analysis_method": "MinHash + LSH (datasketch)",
+            "excluded_third_party": exclude_third_party,
+            "excluded_tests": exclude_tests
+        }
+        
+        return JSONResponse(response)
+    
+    except Exception as e:
+        return JSONResponse(
+            {"error": f"Duplication analysis failed: {str(e)}"}, 
+            status_code=500
+        )
+
 # --- UPDATED ---
 @app.get("/analyze/full")
 def full_analysis(
@@ -376,6 +422,17 @@ def full_analysis(
                 "circular_dependency_chains": [],
                 "graph_density": 0
             }
+
+        # --- NEW: Add duplication analysis ---
+        try:
+            duplication_metrics = analyze_duplicates_minhash(
+                tmpdir, 
+                exclude_third_party, 
+                exclude_tests
+            )
+        except Exception as e:
+            print(f"Error in analyze_duplicates_minhash: {str(e)}")
+            duplication_metrics = {"error": str(e)}
         
         response = {
             "repository": target_repo,
@@ -391,7 +448,9 @@ def full_analysis(
                 "ComplexityDistribution": detailed["complexity_distribution"]
             },
             "dependency_metrics": dep_metrics,
-            "analysis_method": "Tree-sitter AST + NetworkX graph analysis",
+            # --- NEW ---
+            "duplication_metrics": duplication_metrics,
+            "analysis_method": "Tree-sitter AST + NetworkX + MinHash",
             "excluded_third_party": exclude_third_party,
             "excluded_tests": exclude_tests # --- NEW ---
         }
@@ -439,10 +498,12 @@ def root():
             "/analyze/dependencies": "Analyze repository dependency graph",
             "/analyze/file-dependencies": "Get dependencies for a specific file (requires file_path param)",
             "/analyze/dependency-graph": "Export dependency graph (supports 'json' or 'gexf' format)",
-            "/analyze/full": "Complete analysis with code metrics and dependencies",
+            "/analyze/duplicates": "Analyze code duplication", # <-- ADDED
+            "/analyze/full": "Complete analysis with code, deps, and duplication", # <-- UPDATED
             "/cleanup-cache": "Clean up cached repositories (POST)",
             "/login": "GitHub OAuth login",
             "/callback": "GitHub OAuth callback",
             "/health": "Health check"
         }
     })
+
