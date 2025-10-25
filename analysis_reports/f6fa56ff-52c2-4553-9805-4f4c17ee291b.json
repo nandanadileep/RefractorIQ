@@ -1,0 +1,104 @@
+{
+  "repository": "https://github.com/vanna-ai/vanna.git",
+  "code_metrics": {
+    "LOC": 10341,
+    "TODOs_FIXME_HACK": 2,
+    "AvgCyclomaticComplexity": 2.95,
+    "DebtScore": 26.24,
+    "TotalFunctions": 511,
+    "MaxComplexity": 49,
+    "MinComplexity": 1,
+    "FilesAnalyzed": 75,
+    "ComplexityDistribution": {
+      "low": 443,
+      "medium": 45,
+      "high": 20,
+      "very_high": 3
+    }
+  },
+  "dependency_metrics": {
+    "total_files": 75,
+    "total_functions": 493,
+    "total_classes": 91,
+    "total_external_dependencies": 0,
+    "total_edges": 607,
+    "average_connections_per_node": 1.84,
+    "most_dependent_files": [
+      {
+        "file": "src/vanna/base/base.py",
+        "dependencies": 69
+      },
+      {
+        "file": "src/vanna/flask/__init__.py",
+        "dependencies": 46
+      },
+      {
+        "file": "src/vanna/__init__.py",
+        "dependencies": 45
+      },
+      {
+        "file": "src/vanna/types/__init__.py",
+        "dependencies": 39
+      },
+      {
+        "file": "src/vanna/vannadb/vannadb_vector.py",
+        "dependencies": 22
+      }
+    ],
+    "most_depended_on_files": [
+      {
+        "file": "src/vanna/remote.py",
+        "dependents": 6
+      },
+      {
+        "file": "src/vanna/qianfan/Qianfan_embeddings.py",
+        "dependents": 2
+      },
+      {
+        "file": "src/vanna/ZhipuAI/ZhipuAI_embeddings.py",
+        "dependents": 2
+      },
+      {
+        "file": "src/vanna/google/bigquery_vector.py",
+        "dependents": 2
+      },
+      {
+        "file": "src/vanna/flask/assets.py",
+        "dependents": 2
+      }
+    ],
+    "circular_dependencies": 6,
+    "circular_dependency_chains": [
+      [
+        "src/vanna/marqo/marqo.py"
+      ],
+      [
+        "src/vanna/qianfan/Qianfan_embeddings.py"
+      ],
+      [
+        "src/vanna/ZhipuAI/ZhipuAI_embeddings.py"
+      ],
+      [
+        "src/vanna/anthropic/anthropic_chat.py"
+      ],
+      [
+        "src/vanna/chromadb/chromadb_vector.py"
+      ],
+      [
+        "src/vanna/google/bigquery_vector.py"
+      ]
+    ],
+    "graph_density": 0.0014
+  },
+  "duplication_metrics": {
+    "files_analyzed": 75,
+    "duplicate_pairs_found": 0,
+    "similarity_threshold": 0.85,
+    "shingle_size_k": 5,
+    "duplicates": []
+  },
+  "analysis_method": "Tree-sitter AST + NetworkX + MinHash (Async - Local Storage)",
+  "excluded_third_party": true,
+  "excluded_tests": true,
+  "analysis_errors": []
+}

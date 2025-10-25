@@ -1,0 +1,20 @@
+radon
+cloc
+requests
+fastapi
+uvicorn[standard]
+gitpython
+python-dotenv
+tree-sitter
+tree-sitter-python
+tree-sitter-javascript
+tree-sitter-java
+networkx
+datasketch
+simhash
+celery[redis]
+redis
+SQLAlchemy
+psycopg2-binary
+
+# boto3 # REMOVED
