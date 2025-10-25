@@ -1,4 +1,5 @@
 import os
+import re  # --- NEW IMPORT ---
 import networkx as nx
 from tree_sitter import Language, Parser
 import tree_sitter_python as tspython
@@ -34,6 +35,20 @@ THIRD_PARTY_DIRS = {
     'packages',  # NuGet
 }
 
+# --- NEW ---
+# Regex patterns for matching common test file paths
+TEST_FILE_PATTERNS = [
+    re.compile(r'__tests__/'),         # JS __tests__ directory
+    re.compile(r'/tests?/'),          # /test/ or /tests/ directory
+    re.compile(r'test_.*\.py$'),      # Python test_ file
+    re.compile(r'.*_test\.py$'),      # Python _test file
+    re.compile(r'\.spec\.(js|ts)$'),  # JS/TS .spec file
+    re.compile(r'\.test\.(js|ts)$'),  # JS/TS .test file
+    re.compile(r'Test.*\.java$'),     # Java Test* file
+    re.compile(r'.*Test\.java$'),     # Java *Test file
+    re.compile(r'src/test/java/'),    # Maven test directory
+]
+
 def is_third_party_file(filepath, repo_path):
     """Check if a file is in a third-party directory"""
     rel_path = os.path.relpath(filepath, repo_path)
@@ -45,6 +60,19 @@ def is_third_party_file(filepath, repo_path):
             return True
     
     return False
+
+# --- NEW ---
+def is_test_file(filepath, repo_path):
+    """Check if a file is a test file based on common patterns"""
+    try:
+        rel_path = os.path.relpath(filepath, repo_path).replace(os.sep, '/')
+        
+        for pattern in TEST_FILE_PATTERNS:
+            if pattern.search(rel_path):
+                return True
+        return False
+    except Exception:
+        return False
 
 def get_parser_and_language(file_extension):
     """Get appropriate parser and language based on file extension"""
@@ -182,7 +210,9 @@ def extract_functions_and_classes(tree, content, language_type):
     traverse(tree.root_node)
     return entities
 
-def build_dependency_graph(repo_path, exclude_third_party=True):
+# --- UPDATED ---
+# Now takes `exclude_tests`
+def build_dependency_graph(repo_path, exclude_tests=True):
     """Build a comprehensive dependency graph using networkx"""
     G = nx.DiGraph()
     file_data = {}
@@ -194,8 +224,13 @@ def build_dependency_graph(repo_path, exclude_third_party=True):
             if ext in [".py", ".js", ".ts", ".java"]:
                 filepath = os.path.join(root, file)
                 
-                # Skip third-party files if requested
-                if exclude_third_party and is_third_party_file(filepath, repo_path):
+                # Always skip third-party directories for graph *building*
+                if is_third_party_file(filepath, repo_path):
+                    continue
+                
+                # --- NEW ---
+                # Skip test files if requested
+                if exclude_tests and is_test_file(filepath, repo_path):
                     continue
                 
                 rel_path = os.path.relpath(filepath, repo_path)
@@ -267,15 +302,26 @@ def build_dependency_graph(repo_path, exclude_third_party=True):
     
     return G, file_data
 
-def analyze_dependencies(repo_path, exclude_third_party=True):
+# --- UPDATED ---
+def analyze_dependencies(repo_path, exclude_third_party=True, exclude_tests=True):
     """Analyze dependencies and return metrics"""
-    G, file_data = build_dependency_graph(repo_path, exclude_third_party)
+    
+    # Pass `exclude_tests` to the build function
+    G, file_data = build_dependency_graph(repo_path, exclude_tests=exclude_tests)
+    
+    # This logic for `exclude_third_party` remains the same (filtering external nodes)
+    external_nodes = [node for node in G.nodes() if G.nodes[node].get('type') == 'external']
+    total_external = len(external_nodes)
+    
+    if exclude_third_party:
+        G.remove_nodes_from(external_nodes)
+        total_external = 0 # If excluded, report 0
     
     # Calculate metrics
     total_files = sum(1 for node in G.nodes() if G.nodes[node].get('type') == 'file')
     total_functions = sum(1 for node in G.nodes() if G.nodes[node].get('type') == 'function')
     total_classes = sum(1 for node in G.nodes() if G.nodes[node].get('type') == 'class')
-    total_external = sum(1 for node in G.nodes() if G.nodes[node].get('type') == 'external')
+    # total_external is already set from our logic above
     
     # Find most connected files (highest in-degree and out-degree)
     file_nodes = [node for node in G.nodes() if G.nodes[node].get('type') == 'file']
@@ -308,7 +354,7 @@ def analyze_dependencies(repo_path, exclude_third_party=True):
         "total_files": total_files,
         "total_functions": total_functions,
         "total_classes": total_classes,
-        "total_external_dependencies": total_external,
+        "total_external_dependencies": total_external, # This now respects the toggle
         "total_edges": G.number_of_edges(),
         "average_connections_per_node": round(avg_degree, 2),
         "most_dependent_files": [{"file": f, "dependencies": d} for f, d in most_dependent],
@@ -318,9 +364,17 @@ def analyze_dependencies(repo_path, exclude_third_party=True):
         "graph_density": round(nx.density(G), 4) if G.nodes() else 0
     }
 
-def get_file_dependencies(repo_path, file_path, exclude_third_party=True):
+# --- UPDATED ---
+def get_file_dependencies(repo_path, file_path, exclude_third_party=True, exclude_tests=True):
     """Get detailed dependencies for a specific file"""
-    G, file_data = build_dependency_graph(repo_path, exclude_third_party)
+    
+    # Pass `exclude_tests` to the build function
+    G, file_data = build_dependency_graph(repo_path, exclude_tests=exclude_tests)
+    
+    # Filter external nodes based on `exclude_third_party`
+    if exclude_third_party:
+        external_nodes = [node for node in G.nodes() if G.nodes[node].get('type') == 'external']
+        G.remove_nodes_from(external_nodes)
     
     if file_path not in file_data:
         return None
@@ -354,9 +408,17 @@ def get_file_dependencies(repo_path, file_path, exclude_third_party=True):
         "dependents": dependents
     }
 
-def export_graph_data(repo_path, format='json', exclude_third_party=True):
+# --- UPDATED ---
+def export_graph_data(repo_path, format='json', exclude_third_party=True, exclude_tests=True):
     """Export graph in various formats for visualization"""
-    G, file_data = build_dependency_graph(repo_path, exclude_third_party)
+    
+    # Pass `exclude_tests` to the build function
+    G, file_data = build_dependency_graph(repo_path, exclude_tests=exclude_tests)
+    
+    # Filter external nodes based on `exclude_third_party`
+    if exclude_third_party:
+        external_nodes = [node for node in G.nodes() if G.nodes[node].get('type') == 'external']
+        G.remove_nodes_from(external_nodes)
     
     if format == 'json':
         # Convert to JSON-serializable format
@@ -374,5 +436,5 @@ def export_graph_data(repo_path, format='json', exclude_third_party=True):
         return data
     else:
         return None
-    
-    
+
+        

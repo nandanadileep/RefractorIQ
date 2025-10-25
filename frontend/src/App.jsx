@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Github, AlertCircle, CheckCircle, TrendingUp, GitBranch, FileCode, Zap, Info, Package } from 'lucide-react';
+import { Search, Github, AlertCircle, CheckCircle, TrendingUp, GitBranch, FileCode, Zap, Info, Package, TestTube } from 'lucide-react';
 
 // Metric definitions and explanations
 const METRIC_INFO = {
@@ -65,8 +65,14 @@ const METRIC_INFO = {
   },
   excludeThirdParty: {
     title: "Exclude Third-Party Libraries",
-    description: "When enabled, excludes common third-party library directories (node_modules, venv, site-packages, vendor, etc.) from all analysis metrics.",
-    interpretation: "Enable this to focus on your own code quality. Disable to see the complete codebase including dependencies. Recommended: Enable for meaningful project metrics."
+    description: "When enabled, excludes common third-party library directories (node_modules, venv, site-packages, vendor, etc.) from analysis. On the 'Dependencies' tab, this also hides externally imported libraries.",
+    interpretation: "Enable to focus on your code. Note: Most repos .gitignore these folders, so 'Code Metrics' (like LOC) may not change. The 'Dependencies' tab will still update to hide/show external imports."
+  },
+  // --- NEW ---
+  excludeTests: {
+    title: "Exclude Test Files",
+    description: "When enabled, excludes files matching common test patterns (e.g., _test.py, .spec.js, test_*, tests/) from all analysis.",
+    interpretation: "Enable this to focus on your application's production code and get a cleaner dependency graph. Disable to include tests in the metrics."
   }
 };
 
@@ -116,6 +122,7 @@ export default function RefractorIQDashboard() {
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('metrics');
   const [excludeThirdParty, setExcludeThirdParty] = useState(true);
+  const [excludeTests, setExcludeTests] = useState(true); // --- NEW STATE ---
 
   const BACKEND_URL = 'https://fluffy-fortnight-pjr95546qg936qrg-8000.app.github.dev';
 
@@ -130,8 +137,9 @@ export default function RefractorIQDashboard() {
     setAnalysisData(null);
 
     try {
+      // --- UPDATED FETCH URL ---
       const response = await fetch(
-        `${BACKEND_URL}/analyze/full?repo_url=${encodeURIComponent(repoUrl)}&exclude_third_party=${excludeThirdParty}`
+        `${BACKEND_URL}/analyze/full?repo_url=${encodeURIComponent(repoUrl)}&exclude_third_party=${excludeThirdParty}&exclude_tests=${excludeTests}`
       );
       
       if (!response.ok) {
@@ -219,28 +227,55 @@ export default function RefractorIQDashboard() {
             </button>
           </div>
 
-          {/* Third-Party Toggle */}
-          <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-lg border border-slate-200">
-            <label className="flex items-center gap-3 cursor-pointer flex-1">
-              <div className="relative">
-                <input
-                  type="checkbox"
-                  checked={excludeThirdParty}
-                  onChange={(e) => setExcludeThirdParty(e.target.checked)}
-                  className="sr-only peer"
-                />
-                <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </div>
-              <div className="flex items-center gap-2">
-                <Package className="w-5 h-5 text-slate-600" />
-                <span className="text-sm font-medium text-slate-700">
-                  Exclude Third-Party Libraries
-                </span>
-              </div>
-            </label>
-            <Tooltip info={METRIC_INFO.excludeThirdParty} position="left">
-              <Info className="w-5 h-5 text-slate-400 hover:text-slate-600 transition-colors cursor-help" />
-            </Tooltip>
+          {/* Toggles Wrapper */}
+          <div className="space-y-3">
+            {/* Third-Party Toggle */}
+            <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-lg border border-slate-200">
+              <label className="flex items-center gap-3 cursor-pointer flex-1">
+                <div className="relative">
+                  <input
+                    type="checkbox"
+                    checked={excludeThirdParty}
+                    onChange={(e) => setExcludeThirdParty(e.target.checked)}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Package className="w-5 h-5 text-slate-600" />
+                  <span className="text-sm font-medium text-slate-700">
+                    Exclude Third-Party Libraries
+                  </span>
+                </div>
+              </label>
+              <Tooltip info={METRIC_INFO.excludeThirdParty} position="left">
+                <Info className="w-5 h-5 text-slate-400 hover:text-slate-600 transition-colors cursor-help" />
+              </Tooltip>
+            </div>
+            
+            {/* --- NEW TEST FILE TOGGLE --- */}
+            <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-lg border border-slate-200">
+              <label className="flex items-center gap-3 cursor-pointer flex-1">
+                <div className="relative">
+                  <input
+                    type="checkbox"
+                    checked={excludeTests}
+                    onChange={(e) => setExcludeTests(e.target.checked)}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <TestTube className="w-5 h-5 text-slate-600" />
+                  <span className="text-sm font-medium text-slate-700">
+                    Exclude Test Files
+                  </span>
+                </div>
+              </label>
+              <Tooltip info={METRIC_INFO.excludeTests} position="left">
+                <Info className="w-5 h-5 text-slate-400 hover:text-slate-600 transition-colors cursor-help" />
+              </Tooltip>
+            </div>
           </div>
           
           {error && (
@@ -264,12 +299,21 @@ export default function RefractorIQDashboard() {
                     <p className="text-slate-600 break-all">{analysisData.repository}</p>
                   </div>
                 </div>
-                {analysisData.excluded_third_party && (
-                  <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-lg">
-                    <Package className="w-4 h-4 text-blue-600" />
-                    <span className="text-xs font-medium text-blue-700">Third-party excluded</span>
-                  </div>
-                )}
+                {/* --- UPDATED TO SHOW BOTH TOGGLE STATES --- */}
+                <div className="flex flex-col items-end gap-1">
+                  {analysisData.excluded_third_party && (
+                    <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-lg">
+                      <Package className="w-4 h-4 text-blue-600" />
+                      <span className="text-xs font-medium text-blue-700">Third-party excluded</span>
+                    </div>
+                  )}
+                  {analysisData.excluded_tests && (
+                    <div className="flex items-center gap-2 px-3 py-1.5 bg-green-50 border border-green-200 rounded-lg">
+                      <TestTube className="w-4 h-4 text-green-600" />
+                      <span className="text-xs font-medium text-green-700">Tests excluded</span>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -540,3 +584,4 @@ function ComplexityBar({ label, value, total, color }) {
     </div>
   );
 }
+

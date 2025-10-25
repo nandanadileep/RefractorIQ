@@ -1,1 +1,4 @@
 backend/.env
+RefractorIQ/frontend/node_modules
+RefractorIQ/frontend/.env
+RefractorIQ/backend/__pycache__/
