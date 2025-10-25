@@ -1,5 +1,109 @@
 import React, { useState } from 'react';
-import { Search, Github, AlertCircle, CheckCircle, TrendingUp, GitBranch, FileCode, Zap } from 'lucide-react';
+import { Search, Github, AlertCircle, CheckCircle, TrendingUp, GitBranch, FileCode, Zap, Info } from 'lucide-react';
+
+// Metric definitions and explanations
+const METRIC_INFO = {
+  loc: {
+    title: "Lines of Code",
+    description: "Total number of code lines excluding comments and blank lines. Measured using AST parsing.",
+    interpretation: "Lower is often better for maintainability. Industry average: 10,000-50,000 LOC per project."
+  },
+  todos: {
+    title: "TODOs/FIXMEs/HACKs",
+    description: "Count of TODO, FIXME, and HACK comments in the codebase indicating pending work or technical shortcuts.",
+    interpretation: "Lower is better. High counts may indicate incomplete features or deferred refactoring."
+  },
+  avgComplexity: {
+    title: "Average Cyclomatic Complexity",
+    description: "Average complexity across all functions. Measures the number of independent paths through code.",
+    interpretation: "1-5: Simple, 6-10: Moderate, 11-20: Complex, 21+: Very Complex. Lower is better for maintainability."
+  },
+  debtScore: {
+    title: "Technical Debt Score",
+    description: "Composite score calculated from TODOs (×5), complexity (×2), and LOC (÷1000). Higher scores indicate more technical debt.",
+    interpretation: "<50: Low debt, 50-100: Moderate, 100-200: High, 200+: Critical. Lower is better."
+  },
+  totalFunctions: {
+    title: "Total Functions",
+    description: "Total count of all functions and methods across the codebase including Python functions, JS/TS functions, arrow functions, and class methods.",
+    interpretation: "Indicates codebase size and modularity. No strict good/bad threshold."
+  },
+  filesAnalyzed: {
+    title: "Files Analyzed",
+    description: "Number of source code files successfully parsed and analyzed (.py, .js, .ts, .java).",
+    interpretation: "Should match expected file count. Lower than expected may indicate parsing issues."
+  },
+  maxComplexity: {
+    title: "Maximum Complexity",
+    description: "Highest cyclomatic complexity value found in any single function.",
+    interpretation: "Values >20 indicate functions that should be refactored. Ideal: <10"
+  },
+  minComplexity: {
+    title: "Minimum Complexity",
+    description: "Lowest cyclomatic complexity value found in any single function.",
+    interpretation: "Usually 1 for simple functions. Indicates simplest code unit."
+  },
+  totalFiles: {
+    title: "Total Files",
+    description: "Total number of source code files included in dependency analysis.",
+    interpretation: "Indicates project size. More files require better organization."
+  },
+  depFunctions: {
+    title: "External Dependencies",
+    description: "Count of third-party libraries and external modules imported by the codebase from npm, PyPI, Maven, etc.",
+    interpretation: "Monitor for security and maintenance. Each dependency is a potential risk vector. Fewer dependencies = less complexity."
+  },
+  classes: {
+    title: "Total Classes",
+    description: "Number of class definitions found across the codebase.",
+    interpretation: "Indicates OOP usage. Higher doesn't mean better - depends on design approach."
+  },
+  circularDeps: {
+    title: "Circular Dependencies",
+    description: "Number of circular dependency chains detected where files depend on each other in a cycle.",
+    interpretation: "0 is ideal. Any circular dependencies should be refactored to prevent maintenance issues."
+  }
+};
+
+function Tooltip({ info, children, position = 'right' }) {
+  const [show, setShow] = useState(false);
+
+  // Determine tooltip position based on screen location
+  const getPositionClasses = () => {
+    if (position === 'left') {
+      return 'right-full mr-3 top-1/2 -translate-y-1/2';
+    }
+    return 'left-full ml-3 top-1/2 -translate-y-1/2';
+  };
+
+  const getArrowClasses = () => {
+    if (position === 'left') {
+      return '-right-1.5 top-1/2 -translate-y-1/2';
+    }
+    return '-left-1.5 top-1/2 -translate-y-1/2';
+  };
+
+  return (
+    <div className="relative inline-block">
+      <div 
+        onMouseEnter={() => setShow(true)}
+        onMouseLeave={() => setShow(false)}
+        className="cursor-help"
+      >
+        {children}
+      </div>
+      
+      {show && (
+        <div className={`absolute z-50 w-80 p-4 bg-slate-900 text-white rounded-lg shadow-xl pointer-events-none ${getPositionClasses()}`}>
+          <div className={`absolute w-3 h-3 bg-slate-900 transform rotate-45 ${getArrowClasses()}`}></div>
+          <h4 className="font-semibold text-sm mb-2 text-blue-300">{info.title}</h4>
+          <p className="text-xs text-slate-300 mb-2">{info.description}</p>
+          <p className="text-xs text-slate-400 italic">{info.interpretation}</p>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function RefractorIQDashboard() {
   const [repoUrl, setRepoUrl] = useState('');
@@ -8,7 +112,7 @@ export default function RefractorIQDashboard() {
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('metrics');
 
-  const BACKEND_URL = 'https://fluffy-fortnight-pjr95546qg936qrg-8000.app.github.dev'; // GitHub Codespaces backend URL
+  const BACKEND_URL = 'https://fluffy-fortnight-pjr95546qg936qrg-8000.app.github.dev';
 
   const analyzeRepo = async () => {
     if (!repoUrl.trim()) {
@@ -50,6 +154,14 @@ export default function RefractorIQDashboard() {
     if (score < 100) return 'bg-yellow-100 text-yellow-800';
     if (score < 200) return 'bg-orange-100 text-orange-800';
     return 'bg-red-100 text-red-800';
+  };
+
+  const normalizeValue = (value, metricKey) => {
+    // Add normalization logic for different metrics
+    if (metricKey === 'loc' && value > 1000) {
+      return `${(value / 1000).toFixed(1)}K`;
+    }
+    return value.toLocaleString();
   };
 
   return (
@@ -156,20 +268,23 @@ export default function RefractorIQDashboard() {
                       <MetricCard
                         icon={<FileCode className="w-5 h-5" />}
                         label="Lines of Code"
-                        value={analysisData.code_metrics.LOC.toLocaleString()}
+                        value={normalizeValue(analysisData.code_metrics.LOC, 'loc')}
                         color="blue"
+                        info={METRIC_INFO.loc}
                       />
                       <MetricCard
                         icon={<AlertCircle className="w-5 h-5" />}
                         label="TODOs/FIXMEs"
                         value={analysisData.code_metrics.TODOs_FIXME_HACK}
                         color="yellow"
+                        info={METRIC_INFO.todos}
                       />
                       <MetricCard
                         icon={<TrendingUp className="w-5 h-5" />}
                         label="Avg Complexity"
                         value={analysisData.code_metrics.AvgCyclomaticComplexity}
                         color="purple"
+                        info={METRIC_INFO.avgComplexity}
                       />
                       <MetricCard
                         icon={<Zap className="w-5 h-5" />}
@@ -177,6 +292,8 @@ export default function RefractorIQDashboard() {
                         value={analysisData.code_metrics.DebtScore}
                         color="red"
                         badge={getDebtScoreColor(analysisData.code_metrics.DebtScore)}
+                        info={METRIC_INFO.debtScore}
+                        tooltipPosition="left"
                       />
                     </div>
 
@@ -185,17 +302,27 @@ export default function RefractorIQDashboard() {
                       <div className="bg-slate-50 rounded-lg p-5 border border-slate-200">
                         <h3 className="font-semibold text-slate-800 mb-4">Function Analysis</h3>
                         <div className="space-y-3">
-                          <InfoRow label="Total Functions" value={analysisData.code_metrics.TotalFunctions} />
-                          <InfoRow label="Files Analyzed" value={analysisData.code_metrics.FilesAnalyzed} />
+                          <InfoRow 
+                            label="Total Functions" 
+                            value={analysisData.code_metrics.TotalFunctions}
+                            info={METRIC_INFO.totalFunctions}
+                          />
+                          <InfoRow 
+                            label="Files Analyzed" 
+                            value={analysisData.code_metrics.FilesAnalyzed}
+                            info={METRIC_INFO.filesAnalyzed}
+                          />
                           <InfoRow 
                             label="Max Complexity" 
                             value={analysisData.code_metrics.MaxComplexity}
                             valueClass={getComplexityColor(analysisData.code_metrics.MaxComplexity)}
+                            info={METRIC_INFO.maxComplexity}
                           />
                           <InfoRow 
                             label="Min Complexity" 
                             value={analysisData.code_metrics.MinComplexity}
                             valueClass="text-green-600"
+                            info={METRIC_INFO.minComplexity}
                           />
                         </div>
                       </div>
@@ -242,26 +369,33 @@ export default function RefractorIQDashboard() {
                         label="Total Files"
                         value={analysisData.dependency_metrics.total_files}
                         color="blue"
+                        info={METRIC_INFO.totalFiles}
                       />
                       <MetricCard
                         icon={<GitBranch className="w-5 h-5" />}
-                        label="Functions"
-                        value={analysisData.dependency_metrics.total_functions}
+                        label="External Dependencies"
+                        value={analysisData.dependency_metrics.total_external_dependencies}
                         color="green"
+                        info={METRIC_INFO.depFunctions}
                       />
                       <MetricCard
                         icon={<GitBranch className="w-5 h-5" />}
                         label="Classes"
                         value={analysisData.dependency_metrics.total_classes}
                         color="purple"
+                        info={METRIC_INFO.classes}
                       />
                       <MetricCard
                         icon={<AlertCircle className="w-5 h-5" />}
                         label="Circular Dependencies"
                         value={analysisData.dependency_metrics.circular_dependencies}
                         color="red"
+                        info={METRIC_INFO.circularDeps}
+                        tooltipPosition="left"
                       />
                     </div>
+
+                    {/* External Dependencies - removed from here since it's now in the main grid */}
 
                     {/* Most Dependent Files */}
                     {analysisData.dependency_metrics.most_dependent_files.length > 0 && (
@@ -307,7 +441,7 @@ export default function RefractorIQDashboard() {
   );
 }
 
-function MetricCard({ icon, label, value, color, badge }) {
+function MetricCard({ icon, label, value, color, badge, info, tooltipPosition = 'right' }) {
   const colorClasses = {
     blue: 'bg-blue-100 text-blue-600',
     yellow: 'bg-yellow-100 text-yellow-600',
@@ -321,7 +455,14 @@ function MetricCard({ icon, label, value, color, badge }) {
       <div className={`inline-flex p-2 rounded-lg ${colorClasses[color]} mb-3`}>
         {icon}
       </div>
-      <div className="text-sm text-slate-600 mb-1">{label}</div>
+      <div className="flex items-center gap-2 text-sm text-slate-600 mb-1">
+        <span>{label}</span>
+        {info && (
+          <Tooltip info={info} position={tooltipPosition}>
+            <Info className="w-4 h-4 text-slate-400 hover:text-slate-600 transition-colors" />
+          </Tooltip>
+        )}
+      </div>
       <div className={`text-2xl font-bold text-slate-800 ${badge ? `inline-block px-3 py-1 rounded-lg ${badge}` : ''}`}>
         {value}
       </div>
@@ -329,10 +470,17 @@ function MetricCard({ icon, label, value, color, badge }) {
   );
 }
 
-function InfoRow({ label, value, valueClass = 'text-slate-800' }) {
+function InfoRow({ label, value, valueClass = 'text-slate-800', info }) {
   return (
     <div className="flex justify-between items-center">
-      <span className="text-sm text-slate-600">{label}</span>
+      <div className="flex items-center gap-2">
+        <span className="text-sm text-slate-600">{label}</span>
+        {info && (
+          <Tooltip info={info}>
+            <Info className="w-3.5 h-3.5 text-slate-400 hover:text-slate-600 transition-colors" />
+          </Tooltip>
+        )}
+      </div>
       <span className={`font-semibold ${valueClass}`}>{value}</span>
     </div>
   );

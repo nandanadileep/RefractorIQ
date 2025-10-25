@@ -3,6 +3,7 @@ from tree_sitter import Language, Parser
 import tree_sitter_python as tspython
 import tree_sitter_javascript as tsjavascript
 import tree_sitter_java as tsjava
+from shared_constants import FUNCTION_NODE_TYPES, COMPLEXITY_THRESHOLDS, DECISION_NODE_TYPES
 
 # Initialize language objects
 PY_LANGUAGE = Language(tspython.language())
@@ -107,19 +108,9 @@ def calculate_cyclomatic_complexity(node, content):
     """Calculate cyclomatic complexity from AST node"""
     complexity = 1  # Base complexity
     
-    # Decision nodes that increase complexity
-    decision_nodes = {
-        'if_statement', 'elif_clause', 'else_clause',
-        'for_statement', 'while_statement',
-        'except_clause', 'case_statement', 'switch_statement',
-        'conditional_expression', 'ternary_expression',
-        'catch_clause', 'finally_clause',
-        'boolean_operator', 'binary_expression'
-    }
-    
     def traverse(n):
         nonlocal complexity
-        if n.type in decision_nodes:
+        if n.type in DECISION_NODE_TYPES:
             # For boolean operators, check if it's actually 'and'/'or' or '&&'/'||'
             if n.type in ['boolean_operator', 'binary_expression']:
                 try:
@@ -173,11 +164,8 @@ def analyze_functions(repo_path):
                     # Find all function-like nodes by traversing the tree
                     def find_functions(node):
                         functions = []
-                        # Check if current node is a function
-                        if node.type in ['function_definition', 'function_declaration', 
-                                       'method_definition', 'arrow_function',
-                                       'method_declaration', 'constructor_declaration',
-                                       'function', 'method']:
+                        # Use shared FUNCTION_NODE_TYPES constant
+                        if node.type in FUNCTION_NODE_TYPES:
                             functions.append(node)
                         
                         # Recursively check children
@@ -196,12 +184,12 @@ def analyze_functions(repo_path):
                         if complexity > 0:
                             results["min_complexity"] = min(results["min_complexity"], complexity)
                         
-                        # Categorize complexity
-                        if complexity <= 5:
+                        # Categorize complexity using shared thresholds
+                        if complexity <= COMPLEXITY_THRESHOLDS['low'][1]:
                             results["complexity_distribution"]["low"] += 1
-                        elif complexity <= 10:
+                        elif complexity <= COMPLEXITY_THRESHOLDS['medium'][1]:
                             results["complexity_distribution"]["medium"] += 1
-                        elif complexity <= 20:
+                        elif complexity <= COMPLEXITY_THRESHOLDS['high'][1]:
                             results["complexity_distribution"]["high"] += 1
                         else:
                             results["complexity_distribution"]["very_high"] += 1
@@ -235,4 +223,3 @@ def get_detailed_metrics(repo_path):
         "files_analyzed": results["files_analyzed"],
         "complexity_distribution": results["complexity_distribution"]
     }
-

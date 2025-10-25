@@ -5,6 +5,7 @@ import tree_sitter_python as tspython
 import tree_sitter_javascript as tsjavascript
 import tree_sitter_java as tsjava
 from collections import defaultdict
+from shared_constants import FUNCTION_NODE_TYPES
 
 # Initialize language objects
 PY_LANGUAGE = Language(tspython.language())
@@ -117,14 +118,12 @@ def extract_java_imports(tree, content):
     return imports
 
 def extract_functions_and_classes(tree, content, language_type):
-    """Extract function and class definitions"""
+    """Extract function and class definitions using shared FUNCTION_NODE_TYPES constant"""
     entities = {'functions': [], 'classes': []}
     
     def traverse(node):
-        # Functions - use same list as analysis.py
-        if node.type in ['function_definition', 'function_declaration', 'method_definition', 
-                        'method_declaration', 'arrow_function', 'constructor_declaration',
-                        'function', 'method']:  # Added missing types
+        # Use shared FUNCTION_NODE_TYPES constant - CRITICAL FOR CONSISTENCY
+        if node.type in FUNCTION_NODE_TYPES:
             name = None
             for child in node.children:
                 if child.type in ['identifier', 'property_identifier']:
@@ -182,7 +181,7 @@ def build_dependency_graph(repo_path):
                     else:
                         imports = []
                     
-                    # Extract functions and classes
+                    # Extract functions and classes using shared constant
                     entities = extract_functions_and_classes(tree, content, ext)
                     
                     # Add file node to graph
@@ -336,3 +335,5 @@ def export_graph_data(repo_path, format='json'):
         return data
     else:
         return None
+    
+    

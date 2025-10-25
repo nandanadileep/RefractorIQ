@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Request, Query
 from fastapi.responses import RedirectResponse, JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from analysis import (
     count_loc, 
     count_todos, 
@@ -21,30 +22,33 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-
 CLIENT_ID = os.getenv("GITHUB_CLIENT_ID")
 CLIENT_SECRET = os.getenv("GITHUB_CLIENT_SECRET")
 BACKEND_URL = os.getenv("BACKEND_URL")
-GITHUB_PAT = os.getenv("GITHUB_PAT")  # Optional, for private repos
+GITHUB_PAT = os.getenv("GITHUB_PAT")
 REPO_TO_ANALYZE = os.getenv("REPO_TO_ANALYZE", "https://github.com/emcie-co/parlant.git")
 
-# Cache for temporary directories (to avoid re-cloning for multiple endpoints)
+# Cache for temporary directories
 _repo_cache = {}
 
-
-from fastapi.middleware.cors import CORSMiddleware
-
-# Add this right after creating the FastAPI app
+# Create FastAPI app ONCE
 app = FastAPI()
 
-# Add CORS middleware
+# Configure CORS - allow your frontend origin
+origins = [
+    "https://fluffy-fortnight-pjr95546qg936qrg-3000.app.github.dev",
+    "http://localhost:3000",
+    "*"  # Allow all origins during development (remove in production)
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, replace with specific origins
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 def get_or_clone_repo(repo_url: str = None):
     """Clone repo or return cached directory"""
