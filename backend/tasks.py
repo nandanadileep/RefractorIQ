@@ -1,3 +1,4 @@
+# RefractorIQ/backend/tasks.py
 import traceback
 import shutil
 import os
@@ -16,7 +17,8 @@ from .analysis import (
     simple_debt_score,
     get_detailed_metrics
 )
-from .dependency_analysis import analyze_dependencies
+# --- MODIFIED: Import export_graph_data ---
+from .dependency_analysis import analyze_dependencies, export_graph_data
 from .deduplication import analyze_duplicates_minhash
 
 # --- HELPER FUNCTION (Renamed and Updated) ---
@@ -130,12 +132,33 @@ def run_full_analysis(
             code_metrics = {"error": str(e)} # Store error in result
 
         try:
+            # --- MODIFIED: This block is updated ---
             dep_metrics = analyze_dependencies(tmpdir, exclude_third_party, exclude_tests)
             print(f"Job {job_id}: Dependency metrics calculated.")
+
+            # --- NEW: Generate graph JSON data ---
+            try:
+                # Use your existing export function
+                graph_json_data = export_graph_data(
+                    tmpdir, 
+                    format='json', 
+                    exclude_third_party=exclude_third_party, 
+                    exclude_tests=exclude_tests
+                )
+                # Add the graph data directly to the dep_metrics dictionary
+                dep_metrics["graph_json"] = graph_json_data
+                print(f"Job {job_id}: Dependency graph JSON generated.")
+            except Exception as e:
+                print(f"Job {job_id}: Error generating graph JSON: {traceback.format_exc()}")
+                errors_occurred.append(f"Graph JSON generation failed: {str(e)}")
+                dep_metrics["graph_json"] = None # Ensure key exists even if failed
+            # --- END NEW ---
+
         except Exception as e:
             print(f"Job {job_id}: Error calculating dependency metrics: {traceback.format_exc()}")
             errors_occurred.append(f"Dependency analysis failed: {str(e)}")
-            dep_metrics = {"error": str(e)}
+            # --- MODIFIED: Ensure graph_json key exists on failure ---
+            dep_metrics = {"error": str(e), "graph_json": None}
 
         try:
             duplication_metrics = analyze_duplicates_minhash(tmpdir, exclude_third_party, exclude_tests)
@@ -149,7 +172,7 @@ def run_full_analysis(
         final_report = {
             "repository": repo_url,
             "code_metrics": code_metrics,
-            "dependency_metrics": dep_metrics,
+            "dependency_metrics": dep_metrics, # This dict now contains the graph_json
             "duplication_metrics": duplication_metrics,
             "analysis_method": "Tree-sitter AST + NetworkX + MinHash (Async - Local Storage)",
             "excluded_third_party": exclude_third_party,
@@ -209,3 +232,4 @@ def run_full_analysis(
         # Close DB session
         db.close()
         print(f"Job {job_id}: DB session closed.")
+

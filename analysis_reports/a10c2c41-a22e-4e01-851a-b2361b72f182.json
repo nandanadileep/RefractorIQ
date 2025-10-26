@@ -1,0 +1,114 @@
+{
+  "repository": "https://github.com/allenai/olmocr.git",
+  "code_metrics": {
+    "LOC": 39879,
+    "TODOs_FIXME_HACK": 4,
+    "AvgCyclomaticComplexity": 5.0,
+    "DebtScore": 69.88,
+    "TotalFunctions": 1469,
+    "MaxComplexity": 104,
+    "MinComplexity": 1,
+    "FilesAnalyzed": 134,
+    "ComplexityDistribution": {
+      "low": 1054,
+      "medium": 240,
+      "high": 120,
+      "very_high": 55
+    }
+  },
+  "dependency_metrics": {
+    "total_files": 133,
+    "total_functions": 945,
+    "total_classes": 141,
+    "total_external_dependencies": 0,
+    "total_edges": 1099,
+    "average_connections_per_node": 1.8,
+    "most_dependent_files": [
+      {
+        "file": "olmocr/bench/katex/katex.min.js",
+        "dependencies": 140
+      },
+      {
+        "file": "scripts/pii/pii_rule_comparison.py",
+        "dependencies": 46
+      },
+      {
+        "file": "olmocr/train/dataloader.py",
+        "dependencies": 42
+      },
+      {
+        "file": "olmocr/work_queue.py",
+        "dependencies": 34
+      },
+      {
+        "file": "olmocr/train/config.py",
+        "dependencies": 29
+      }
+    ],
+    "most_depended_on_files": [
+      {
+        "file": "olmocr/datatypes.py",
+        "dependents": 7
+      },
+      {
+        "file": "olmocr/bench/runners/run_gemini.py",
+        "dependents": 2
+      },
+      {
+        "file": "olmocr/bench/runners/run_chatgpt.py",
+        "dependents": 2
+      },
+      {
+        "file": "olmocr/bench/miners/mine_old_scans_math.py",
+        "dependents": 1
+      },
+      {
+        "file": "scripts/data/convertsilver_openai.py",
+        "dependents": 1
+      }
+    ],
+    "circular_dependencies": 0,
+    "circular_dependency_chains": [],
+    "graph_density": 0.0007,
+    "graph_json": null
+  },
+  "duplication_metrics": {
+    "files_analyzed": 134,
+    "duplicate_pairs_found": 5,
+    "similarity_threshold": 0.85,
+    "shingle_size_k": 5,
+    "duplicates": [
+      {
+        "file_a": "olmocr/data/runopenaibatch.py",
+        "file_b": "scripts/data/runopenaibatch.py",
+        "similarity": 1.0
+      },
+      {
+        "file_a": "olmocr/data/buildsilver.py",
+        "file_b": "scripts/data/buildsilver.py",
+        "similarity": 1.0
+      },
+      {
+        "file_a": "olmocr/bench/miners/mine_tables_gpt_simple.py",
+        "file_b": "olmocr/bench/miners/mine_multilingual_gpt.py",
+        "similarity": 0.9062
+      },
+      {
+        "file_a": "olmocr/bench/miners/check_old_scans_math.py",
+        "file_b": "olmocr/bench/miners/check_headers_footers.py",
+        "similarity": 0.9219
+      },
+      {
+        "file_a": "scripts/pii/tagging_pipeline.py",
+        "file_b": "scripts/pii/tagging_pipeline_v2.py",
+        "similarity": 0.9297
+      }
+    ]
+  },
+  "analysis_method": "Tree-sitter AST + NetworkX + MinHash (Async - Local Storage)",
+  "excluded_third_party": true,
+  "excluded_tests": true,
+  "analysis_errors": [
+    "Graph JSON generation failed: name 'json_graph' is not defined"
+  ]
+}

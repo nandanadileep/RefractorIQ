@@ -1,0 +1,2912 @@
+{
+  "repository": "https://github.com/yeongpin/cursor-free-vip.git",
+  "code_metrics": {
+    "LOC": 8799,
+    "TODOs_FIXME_HACK": 0,
+    "AvgCyclomaticComplexity": 9.71,
+    "DebtScore": 28.22,
+    "TotalFunctions": 208,
+    "MaxComplexity": 86,
+    "MinComplexity": 1,
+    "FilesAnalyzed": 25,
+    "ComplexityDistribution": {
+      "low": 96,
+      "medium": 55,
+      "high": 31,
+      "very_high": 26
+    }
+  },
+  "dependency_metrics": {
+    "total_files": 25,
+    "total_functions": 205,
+    "total_classes": 17,
+    "total_external_dependencies": 0,
+    "total_edges": 255,
+    "average_connections_per_node": 2.06,
+    "most_dependent_files": [
+      {
+        "file": "main.py",
+        "dependencies": 35
+      },
+      {
+        "file": "reset_machine_manual.py",
+        "dependencies": 23
+      },
+      {
+        "file": "totally_reset_cursor.py",
+        "dependencies": 23
+      },
+      {
+        "file": "oauth_auth.py",
+        "dependencies": 18
+      },
+      {
+        "file": "cursor_acc_info.py",
+        "dependencies": 17
+      }
+    ],
+    "most_depended_on_files": [
+      {
+        "file": "cursor_register_manual.py",
+        "dependents": 10
+      },
+      {
+        "file": "main.py",
+        "dependents": 7
+      },
+      {
+        "file": "check_user_authorized.py",
+        "dependents": 2
+      },
+      {
+        "file": "manual_custom_auth.py",
+        "dependents": 1
+      },
+      {
+        "file": "bypass_version.py",
+        "dependents": 1
+      }
+    ],
+    "circular_dependencies": 13,
+    "circular_dependency_chains": [
+      [
+        "restore_machine_id.py",
+        "cursor_register_manual.py",
+        "main.py"
+      ],
+      [
+        "restore_machine_id.py",
+        "main.py"
+      ],
+      [
+        "disable_auto_update.py",
+        "cursor_register_manual.py",
+        "main.py"
+      ],
+      [
+        "disable_auto_update.py",
+        "main.py"
+      ],
+      [
+        "quit_cursor.py",
+        "main.py"
+      ],
+      [
+        "cursor_register_manual.py",
+        "main.py"
+      ],
+      [
+        "cursor_register_manual.py",
+        "main.py",
+        "cursor_acc_info.py"
+      ],
+      [
+        "cursor_register_manual.py",
+        "main.py",
+        "reset_machine_manual.py"
+      ],
+      [
+        "cursor_register_manual.py",
+        "main.py",
+        "totally_reset_cursor.py"
+      ],
+      [
+        "cursor_register_manual.py",
+        "main.py",
+        "logo.py"
+      ]
+    ],
+    "graph_density": 0.0042,
+    "graph_json": {
+      "directed": true,
+      "multigraph": false,
+      "graph": {},
+      "nodes": [
+        {
+          "type": "file",
+          "language": ".py",
+          "id": "config.py"
+        },
+        {
+          "type": "function",
+          "name": "setup_config",
+          "file": "config.py",
+          "id": "config.py::setup_config"
+        },
+        {
+          "type": "function",
+          "name": "print_config",
+          "file": "config.py",
+          "id": "config.py::print_config"
+        },
+        {
+          "type": "function",
+          "name": "force_update_config",
+          "file": "config.py",
+          "id": "config.py::force_update_config"
+        },
+        {
+          "type": "function",
+          "name": "get_config",
+          "file": "config.py",
+          "id": "config.py::get_config"
+        },
+        {
+          "type": "file",
+          "language": ".py",
+          "id": "manual_custom_auth.py"
+        },
+        {
+          "type": "function",
+          "name": "generate_random_email",
+          "file": "manual_custom_auth.py",
+          "id": "manual_custom_auth.py::generate_random_email"
+        },
+        {
+          "type": "function",
+          "name": "main",
+          "file": "manual_custom_auth.py",
+          "id": "manual_custom_auth.py::main"
+        },
+        {
+          "type": "file",
+          "language": ".py",
+          "id": "cursor_auth.py"
+        },
+        {
+          "type": "function",
+          "name": "__init__",
+          "file": "cursor_auth.py",
+          "id": "cursor_auth.py::__init__"
+        },
+        {
+          "type": "function",
+          "name": "update_auth",
+          "file": "cursor_auth.py",
+          "id": "cursor_auth.py::update_auth"
+        },
+        {
+          "type": "class",
+          "name": "CursorAuth",
+          "file": "cursor_auth.py",
+          "id": "cursor_auth.py::CursorAuth"
+        },
+        {
+          "type": "file",
+          "language": ".py",
+          "id": "bypass_version.py"
+        },
+        {
+          "type": "function",
+          "name": "get_product_json_path",
+          "file": "bypass_version.py",
+          "id": "bypass_version.py::get_product_json_path"
+        },
+        {
+          "type": "function",
+          "name": "compare_versions",
+          "file": "bypass_version.py",
+          "id": "bypass_version.py::compare_versions"
+        },
+        {
+          "type": "function",
+          "name": "bypass_version",
+          "file": "bypass_version.py",
+          "id": "bypass_version.py::bypass_version"
+        },
+        {
+          "type": "function",
+          "name": "main",
+          "file": "bypass_version.py",
+          "id": "bypass_version.py::main"
+        },
+        {
+          "type": "file",
+          "language": ".py",
+          "id": "cursor_register_manual.py"
+        },
+        {
+          "type": "function",
+          "name": "__init__",
+          "file": "cursor_register_manual.py",
+          "id": "cursor_register_manual.py::__init__"
+        },
+        {
+          "type": "function",
+          "name": "_generate_password",
+          "file": "cursor_register_manual.py",
+          "id": "cursor_register_manual.py::_generate_password"
+        },
+        {
+          "type": "function",
+          "name": "setup_email",
+          "file": "cursor_register_manual.py",
+          "id": "cursor_register_manual.py::setup_email"
+        },
+        {
+          "type": "function",
+          "name": "get_verification_code",
+          "file": "cursor_register_manual.py",
+          "id": "cursor_register_manual.py::get_verification_code"
+        },
+        {
+          "type": "function",
+          "name": "register_cursor",
+          "file": "cursor_register_manual.py",
+          "id": "cursor_register_manual.py::register_cursor"
+        },
+        {
+          "type": "function",
+          "name": "_get_account_info",
+          "file": "cursor_register_manual.py",
+          "id": "cursor_register_manual.py::_get_account_info"
+        },
+        {
+          "type": "function",
+          "name": "_save_account_info",
+          "file": "cursor_register_manual.py",
+          "id": "cursor_register_manual.py::_save_account_info"
+        },
+        {
+          "type": "function",
+          "name": "start",
+          "file": "cursor_register_manual.py",
+          "id": "cursor_register_manual.py::start"
+        },
+        {
+          "type": "function",
+          "name": "update_cursor_auth",
+          "file": "cursor_register_manual.py",
+          "id": "cursor_register_manual.py::update_cursor_auth"
+        },
+        {
+          "type": "function",
+          "name": "main",
+          "file": "cursor_register_manual.py",
+          "id": "cursor_register_manual.py::main"
+        },
+        {
+          "type": "class",
+          "name": "CursorRegistration",
+          "file": "cursor_register_manual.py",
+          "id": "cursor_register_manual.py::CursorRegistration"
+        },
+        {
+          "type": "file",
+          "language": ".py",
+          "id": "logo.py"
+        },
+        {
+          "type": "function",
+          "name": "get_terminal_width",
+          "file": "logo.py",
+          "id": "logo.py::get_terminal_width"
+        },
+        {
+          "type": "function",
+          "name": "center_multiline_text",
+          "file": "logo.py",
+          "id": "logo.py::center_multiline_text"
+        },
+        {
+          "type": "function",
+          "name": "print_logo",
+          "file": "logo.py",
+          "id": "logo.py::print_logo"
+        },
+        {
+          "type": "file",
+          "language": ".py",
+          "id": "bypass_token_limit.py"
+        },
+        {
+          "type": "function",
+          "name": "get_user_documents_path",
+          "file": "bypass_token_limit.py",
+          "id": "bypass_token_limit.py::get_user_documents_path"
+        },
+        {
+          "type": "function",
+          "name": "get_workbench_cursor_path",
+          "file": "bypass_token_limit.py",
+          "id": "bypass_token_limit.py::get_workbench_cursor_path"
+        },
+        {
+          "type": "function",
+          "name": "modify_workbench_js",
+          "file": "bypass_token_limit.py",
+          "id": "bypass_token_limit.py::modify_workbench_js"
+        },
+        {
+          "type": "function",
+          "name": "run",
+          "file": "bypass_token_limit.py",
+          "id": "bypass_token_limit.py::run"
+        },
+        {
+          "type": "file",
+          "language": ".py",
+          "id": "check_user_authorized.py"
+        },
+        {
+          "type": "function",
+          "name": "generate_hashed64_hex",
+          "file": "check_user_authorized.py",
+          "id": "check_user_authorized.py::generate_hashed64_hex"
+        },
+        {
+          "type": "function",
+          "name": "obfuscate_bytes",
+          "file": "check_user_authorized.py",
+          "id": "check_user_authorized.py::obfuscate_bytes"
+        },
+        {
+          "type": "function",
+          "name": "generate_cursor_checksum",
+          "file": "check_user_authorized.py",
+          "id": "check_user_authorized.py::generate_cursor_checksum"
+        },
+        {
+          "type": "function",
+          "name": "check_user_authorized",
+          "file": "check_user_authorized.py",
+          "id": "check_user_authorized.py::check_user_authorized"
+        },
+        {
+          "type": "function",
+          "name": "run",
+          "file": "check_user_authorized.py",
+          "id": "check_user_authorized.py::run"
+        },
+        {
+          "type": "function",
+          "name": "main",
+          "file": "check_user_authorized.py",
+          "id": "check_user_authorized.py::main"
+        },
+        {
+          "type": "file",
+          "language": ".py",
+          "id": "new_signup.py"
+        },
+        {
+          "type": "function",
+          "name": "cleanup_chrome_processes",
+          "file": "new_signup.py",
+          "id": "new_signup.py::cleanup_chrome_processes"
+        },
+        {
+          "type": "function",
+          "name": "signal_handler",
+          "file": "new_signup.py",
+          "id": "new_signup.py::signal_handler"
+        },
+        {
+          "type": "function",
+          "name": "simulate_human_input",
+          "file": "new_signup.py",
+          "id": "new_signup.py::simulate_human_input"
+        },
+        {
+          "type": "function",
+          "name": "fill_signup_form",
+          "file": "new_signup.py",
+          "id": "new_signup.py::fill_signup_form"
+        },
+        {
+          "type": "function",
+          "name": "get_user_documents_path",
+          "file": "new_signup.py",
+          "id": "new_signup.py::get_user_documents_path"
+        },
+        {
+          "type": "function",
+          "name": "get_random_wait_time",
+          "file": "new_signup.py",
+          "id": "new_signup.py::get_random_wait_time"
+        },
+        {
+          "type": "function",
+          "name": "setup_driver",
+          "file": "new_signup.py",
+          "id": "new_signup.py::setup_driver"
+        },
+        {
+          "type": "function",
+          "name": "handle_turnstile",
+          "file": "new_signup.py",
+          "id": "new_signup.py::handle_turnstile"
+        },
+        {
+          "type": "function",
+          "name": "check_verification_success",
+          "file": "new_signup.py",
+          "id": "new_signup.py::check_verification_success"
+        },
+        {
+          "type": "function",
+          "name": "generate_password",
+          "file": "new_signup.py",
+          "id": "new_signup.py::generate_password"
+        },
+        {
+          "type": "function",
+          "name": "fill_password",
+          "file": "new_signup.py",
+          "id": "new_signup.py::fill_password"
+        },
+        {
+          "type": "function",
+          "name": "handle_verification_code",
+          "file": "new_signup.py",
+          "id": "new_signup.py::handle_verification_code"
+        },
+        {
+          "type": "function",
+          "name": "handle_sign_in",
+          "file": "new_signup.py",
+          "id": "new_signup.py::handle_sign_in"
+        },
+        {
+          "type": "function",
+          "name": "main",
+          "file": "new_signup.py",
+          "id": "new_signup.py::main"
+        },
+        {
+          "type": "file",
+          "language": ".py",
+          "id": "fill_missing_translations.py"
+        },
+        {
+          "type": "function",
+          "name": "get_keys",
+          "file": "fill_missing_translations.py",
+          "id": "fill_missing_translations.py::get_keys"
+        },
+        {
+          "type": "function",
+          "name": "get_by_path",
+          "file": "fill_missing_translations.py",
+          "id": "fill_missing_translations.py::get_by_path"
+        },
+        {
+          "type": "function",
+          "name": "set_by_path",
+          "file": "fill_missing_translations.py",
+          "id": "fill_missing_translations.py::set_by_path"
+        },
+        {
+          "type": "function",
+          "name": "get_google_lang_code",
+          "file": "fill_missing_translations.py",
+          "id": "fill_missing_translations.py::get_google_lang_code"
+        },
+        {
+          "type": "function",
+          "name": "translate",
+          "file": "fill_missing_translations.py",
+          "id": "fill_missing_translations.py::translate"
+        },
+        {
+          "type": "function",
+          "name": "translate_web_scraping",
+          "file": "fill_missing_translations.py",
+          "id": "fill_missing_translations.py::translate_web_scraping"
+        },
+        {
+          "type": "function",
+          "name": "process_language",
+          "file": "fill_missing_translations.py",
+          "id": "fill_missing_translations.py::process_language"
+        },
+        {
+          "type": "function",
+          "name": "main",
+          "file": "fill_missing_translations.py",
+          "id": "fill_missing_translations.py::main"
+        },
+        {
+          "type": "file",
+          "language": ".py",
+          "id": "account_manager.py"
+        },
+        {
+          "type": "function",
+          "name": "__init__",
+          "file": "account_manager.py",
+          "id": "account_manager.py::__init__"
+        },
+        {
+          "type": "function",
+          "name": "save_account_info",
+          "file": "account_manager.py",
+          "id": "account_manager.py::save_account_info"
+        },
+        {
+          "type": "function",
+          "name": "get_last_email_domain",
+          "file": "account_manager.py",
+          "id": "account_manager.py::get_last_email_domain"
+        },
+        {
+          "type": "function",
+          "name": "suggest_email",
+          "file": "account_manager.py",
+          "id": "account_manager.py::suggest_email"
+        },
+        {
+          "type": "class",
+          "name": "AccountManager",
+          "file": "account_manager.py",
+          "id": "account_manager.py::AccountManager"
+        },
+        {
+          "type": "file",
+          "language": ".py",
+          "id": "build.py"
+        },
+        {
+          "type": "function",
+          "name": "__init__",
+          "file": "build.py",
+          "id": "build.py::__init__"
+        },
+        {
+          "type": "function",
+          "name": "start",
+          "file": "build.py",
+          "id": "build.py::start"
+        },
+        {
+          "type": "function",
+          "name": "stop",
+          "file": "build.py",
+          "id": "build.py::stop"
+        },
+        {
+          "type": "function",
+          "name": "_animate",
+          "file": "build.py",
+          "id": "build.py::_animate"
+        },
+        {
+          "type": "function",
+          "name": "progress_bar",
+          "file": "build.py",
+          "id": "build.py::progress_bar"
+        },
+        {
+          "type": "function",
+          "name": "simulate_progress",
+          "file": "build.py",
+          "id": "build.py::simulate_progress"
+        },
+        {
+          "type": "function",
+          "name": "build",
+          "file": "build.py",
+          "id": "build.py::build"
+        },
+        {
+          "type": "class",
+          "name": "LoadingAnimation",
+          "file": "build.py",
+          "id": "build.py::LoadingAnimation"
+        },
+        {
+          "type": "file",
+          "language": ".py",
+          "id": "reset_machine_manual.py"
+        },
+        {
+          "type": "function",
+          "name": "get_user_documents_path",
+          "file": "reset_machine_manual.py",
+          "id": "reset_machine_manual.py::get_user_documents_path"
+        },
+        {
+          "type": "function",
+          "name": "get_cursor_paths",
+          "file": "reset_machine_manual.py",
+          "id": "reset_machine_manual.py::get_cursor_paths"
+        },
+        {
+          "type": "function",
+          "name": "get_cursor_machine_id_path",
+          "file": "reset_machine_manual.py",
+          "id": "reset_machine_manual.py::get_cursor_machine_id_path"
+        },
+        {
+          "type": "function",
+          "name": "get_workbench_cursor_path",
+          "file": "reset_machine_manual.py",
+          "id": "reset_machine_manual.py::get_workbench_cursor_path"
+        },
+        {
+          "type": "function",
+          "name": "version_check",
+          "file": "reset_machine_manual.py",
+          "id": "reset_machine_manual.py::version_check"
+        },
+        {
+          "type": "function",
+          "name": "parse_version",
+          "file": "reset_machine_manual.py",
+          "id": "reset_machine_manual.py::parse_version"
+        },
+        {
+          "type": "function",
+          "name": "check_cursor_version",
+          "file": "reset_machine_manual.py",
+          "id": "reset_machine_manual.py::check_cursor_version"
+        },
+        {
+          "type": "function",
+          "name": "modify_workbench_js",
+          "file": "reset_machine_manual.py",
+          "id": "reset_machine_manual.py::modify_workbench_js"
+        },
+        {
+          "type": "function",
+          "name": "modify_main_js",
+          "file": "reset_machine_manual.py",
+          "id": "reset_machine_manual.py::modify_main_js"
+        },
+        {
+          "type": "function",
+          "name": "patch_cursor_get_machine_id",
+          "file": "reset_machine_manual.py",
+          "id": "reset_machine_manual.py::patch_cursor_get_machine_id"
+        },
+        {
+          "type": "function",
+          "name": "__init__",
+          "file": "reset_machine_manual.py",
+          "id": "reset_machine_manual.py::__init__"
+        },
+        {
+          "type": "function",
+          "name": "generate_new_ids",
+          "file": "reset_machine_manual.py",
+          "id": "reset_machine_manual.py::generate_new_ids"
+        },
+        {
+          "type": "function",
+          "name": "update_sqlite_db",
+          "file": "reset_machine_manual.py",
+          "id": "reset_machine_manual.py::update_sqlite_db"
+        },
+        {
+          "type": "function",
+          "name": "update_system_ids",
+          "file": "reset_machine_manual.py",
+          "id": "reset_machine_manual.py::update_system_ids"
+        },
+        {
+          "type": "function",
+          "name": "_update_windows_machine_guid",
+          "file": "reset_machine_manual.py",
+          "id": "reset_machine_manual.py::_update_windows_machine_guid"
+        },
+        {
+          "type": "function",
+          "name": "_update_windows_machine_id",
+          "file": "reset_machine_manual.py",
+          "id": "reset_machine_manual.py::_update_windows_machine_id"
+        },
+        {
+          "type": "function",
+          "name": "_update_macos_platform_uuid",
+          "file": "reset_machine_manual.py",
+          "id": "reset_machine_manual.py::_update_macos_platform_uuid"
+        },
+        {
+          "type": "function",
+          "name": "reset_machine_ids",
+          "file": "reset_machine_manual.py",
+          "id": "reset_machine_manual.py::reset_machine_ids"
+        },
+        {
+          "type": "function",
+          "name": "update_machine_id_file",
+          "file": "reset_machine_manual.py",
+          "id": "reset_machine_manual.py::update_machine_id_file"
+        },
+        {
+          "type": "function",
+          "name": "run",
+          "file": "reset_machine_manual.py",
+          "id": "reset_machine_manual.py::run"
+        },
+        {
+          "type": "class",
+          "name": "MachineIDResetter",
+          "file": "reset_machine_manual.py",
+          "id": "reset_machine_manual.py::MachineIDResetter"
+        },
+        {
+          "type": "file",
+          "language": ".py",
+          "id": "utils.py"
+        },
+        {
+          "type": "function",
+          "name": "get_user_documents_path",
+          "file": "utils.py",
+          "id": "utils.py::get_user_documents_path"
+        },
+        {
+          "type": "function",
+          "name": "get_default_driver_path",
+          "file": "utils.py",
+          "id": "utils.py::get_default_driver_path"
+        },
+        {
+          "type": "function",
+          "name": "get_default_chrome_driver_path",
+          "file": "utils.py",
+          "id": "utils.py::get_default_chrome_driver_path"
+        },
+        {
+          "type": "function",
+          "name": "get_default_edge_driver_path",
+          "file": "utils.py",
+          "id": "utils.py::get_default_edge_driver_path"
+        },
+        {
+          "type": "function",
+          "name": "get_default_firefox_driver_path",
+          "file": "utils.py",
+          "id": "utils.py::get_default_firefox_driver_path"
+        },
+        {
+          "type": "function",
+          "name": "get_default_brave_driver_path",
+          "file": "utils.py",
+          "id": "utils.py::get_default_brave_driver_path"
+        },
+        {
+          "type": "function",
+          "name": "get_default_browser_path",
+          "file": "utils.py",
+          "id": "utils.py::get_default_browser_path"
+        },
+        {
+          "type": "function",
+          "name": "get_linux_cursor_path",
+          "file": "utils.py",
+          "id": "utils.py::get_linux_cursor_path"
+        },
+        {
+          "type": "function",
+          "name": "get_random_wait_time",
+          "file": "utils.py",
+          "id": "utils.py::get_random_wait_time"
+        },
+        {
+          "type": "file",
+          "language": ".py",
+          "id": "cursor_acc_info.py"
+        },
+        {
+          "type": "function",
+          "name": "get_proxy",
+          "file": "cursor_acc_info.py",
+          "id": "cursor_acc_info.py::get_proxy"
+        },
+        {
+          "type": "function",
+          "name": "get_usage",
+          "file": "cursor_acc_info.py",
+          "id": "cursor_acc_info.py::get_usage"
+        },
+        {
+          "type": "function",
+          "name": "get_stripe_profile",
+          "file": "cursor_acc_info.py",
+          "id": "cursor_acc_info.py::get_stripe_profile"
+        },
+        {
+          "type": "function",
+          "name": "get_token_from_config",
+          "file": "cursor_acc_info.py",
+          "id": "cursor_acc_info.py::get_token_from_config"
+        },
+        {
+          "type": "function",
+          "name": "get_token_from_storage",
+          "file": "cursor_acc_info.py",
+          "id": "cursor_acc_info.py::get_token_from_storage"
+        },
+        {
+          "type": "function",
+          "name": "get_token_from_sqlite",
+          "file": "cursor_acc_info.py",
+          "id": "cursor_acc_info.py::get_token_from_sqlite"
+        },
+        {
+          "type": "function",
+          "name": "get_token_from_session",
+          "file": "cursor_acc_info.py",
+          "id": "cursor_acc_info.py::get_token_from_session"
+        },
+        {
+          "type": "function",
+          "name": "get_token",
+          "file": "cursor_acc_info.py",
+          "id": "cursor_acc_info.py::get_token"
+        },
+        {
+          "type": "function",
+          "name": "format_subscription_type",
+          "file": "cursor_acc_info.py",
+          "id": "cursor_acc_info.py::format_subscription_type"
+        },
+        {
+          "type": "function",
+          "name": "get_email_from_storage",
+          "file": "cursor_acc_info.py",
+          "id": "cursor_acc_info.py::get_email_from_storage"
+        },
+        {
+          "type": "function",
+          "name": "get_email_from_sqlite",
+          "file": "cursor_acc_info.py",
+          "id": "cursor_acc_info.py::get_email_from_sqlite"
+        },
+        {
+          "type": "function",
+          "name": "display_account_info",
+          "file": "cursor_acc_info.py",
+          "id": "cursor_acc_info.py::display_account_info"
+        },
+        {
+          "type": "function",
+          "name": "get_display_width",
+          "file": "cursor_acc_info.py",
+          "id": "cursor_acc_info.py::get_display_width"
+        },
+        {
+          "type": "function",
+          "name": "main",
+          "file": "cursor_acc_info.py",
+          "id": "cursor_acc_info.py::main"
+        },
+        {
+          "type": "class",
+          "name": "Config",
+          "file": "cursor_acc_info.py",
+          "id": "cursor_acc_info.py::Config"
+        },
+        {
+          "type": "class",
+          "name": "UsageManager",
+          "file": "cursor_acc_info.py",
+          "id": "cursor_acc_info.py::UsageManager"
+        },
+        {
+          "type": "file",
+          "language": ".py",
+          "id": "oauth_auth.py"
+        },
+        {
+          "type": "function",
+          "name": "__init__",
+          "file": "oauth_auth.py",
+          "id": "oauth_auth.py::__init__"
+        },
+        {
+          "type": "function",
+          "name": "_get_available_profiles",
+          "file": "oauth_auth.py",
+          "id": "oauth_auth.py::_get_available_profiles"
+        },
+        {
+          "type": "function",
+          "name": "_select_profile",
+          "file": "oauth_auth.py",
+          "id": "oauth_auth.py::_select_profile"
+        },
+        {
+          "type": "function",
+          "name": "setup_browser",
+          "file": "oauth_auth.py",
+          "id": "oauth_auth.py::setup_browser"
+        },
+        {
+          "type": "function",
+          "name": "_kill_browser_processes",
+          "file": "oauth_auth.py",
+          "id": "oauth_auth.py::_kill_browser_processes"
+        },
+        {
+          "type": "function",
+          "name": "_get_user_data_directory",
+          "file": "oauth_auth.py",
+          "id": "oauth_auth.py::_get_user_data_directory"
+        },
+        {
+          "type": "function",
+          "name": "_get_browser_path",
+          "file": "oauth_auth.py",
+          "id": "oauth_auth.py::_get_browser_path"
+        },
+        {
+          "type": "function",
+          "name": "_configure_browser_options",
+          "file": "oauth_auth.py",
+          "id": "oauth_auth.py::_configure_browser_options"
+        },
+        {
+          "type": "function",
+          "name": "_fix_chrome_permissions",
+          "file": "oauth_auth.py",
+          "id": "oauth_auth.py::_fix_chrome_permissions"
+        },
+        {
+          "type": "function",
+          "name": "handle_google_auth",
+          "file": "oauth_auth.py",
+          "id": "oauth_auth.py::handle_google_auth"
+        },
+        {
+          "type": "function",
+          "name": "_wait_for_auth",
+          "file": "oauth_auth.py",
+          "id": "oauth_auth.py::_wait_for_auth"
+        },
+        {
+          "type": "function",
+          "name": "check_usage_limits",
+          "file": "oauth_auth.py",
+          "id": "oauth_auth.py::check_usage_limits"
+        },
+        {
+          "type": "function",
+          "name": "handle_github_auth",
+          "file": "oauth_auth.py",
+          "id": "oauth_auth.py::handle_github_auth"
+        },
+        {
+          "type": "function",
+          "name": "_handle_oauth",
+          "file": "oauth_auth.py",
+          "id": "oauth_auth.py::_handle_oauth"
+        },
+        {
+          "type": "function",
+          "name": "_extract_auth_info",
+          "file": "oauth_auth.py",
+          "id": "oauth_auth.py::_extract_auth_info"
+        },
+        {
+          "type": "function",
+          "name": "_delete_current_account",
+          "file": "oauth_auth.py",
+          "id": "oauth_auth.py::_delete_current_account"
+        },
+        {
+          "type": "function",
+          "name": "main",
+          "file": "oauth_auth.py",
+          "id": "oauth_auth.py::main"
+        },
+        {
+          "type": "class",
+          "name": "OAuthHandler",
+          "file": "oauth_auth.py",
+          "id": "oauth_auth.py::OAuthHandler"
+        },
+        {
+          "type": "file",
+          "language": ".py",
+          "id": "disable_auto_update.py"
+        },
+        {
+          "type": "function",
+          "name": "__init__",
+          "file": "disable_auto_update.py",
+          "id": "disable_auto_update.py::__init__"
+        },
+        {
+          "type": "function",
+          "name": "_remove_update_url",
+          "file": "disable_auto_update.py",
+          "id": "disable_auto_update.py::_remove_update_url"
+        },
+        {
+          "type": "function",
+          "name": "_kill_cursor_processes",
+          "file": "disable_auto_update.py",
+          "id": "disable_auto_update.py::_kill_cursor_processes"
+        },
+        {
+          "type": "function",
+          "name": "_remove_updater_directory",
+          "file": "disable_auto_update.py",
+          "id": "disable_auto_update.py::_remove_updater_directory"
+        },
+        {
+          "type": "function",
+          "name": "_clear_update_yml_file",
+          "file": "disable_auto_update.py",
+          "id": "disable_auto_update.py::_clear_update_yml_file"
+        },
+        {
+          "type": "function",
+          "name": "_create_blocking_file",
+          "file": "disable_auto_update.py",
+          "id": "disable_auto_update.py::_create_blocking_file"
+        },
+        {
+          "type": "function",
+          "name": "disable_auto_update",
+          "file": "disable_auto_update.py",
+          "id": "disable_auto_update.py::disable_auto_update"
+        },
+        {
+          "type": "function",
+          "name": "run",
+          "file": "disable_auto_update.py",
+          "id": "disable_auto_update.py::run"
+        },
+        {
+          "type": "class",
+          "name": "AutoUpdateDisabler",
+          "file": "disable_auto_update.py",
+          "id": "disable_auto_update.py::AutoUpdateDisabler"
+        },
+        {
+          "type": "file",
+          "language": ".py",
+          "id": "totally_reset_cursor.py"
+        },
+        {
+          "type": "function",
+          "name": "get_user_documents_path",
+          "file": "totally_reset_cursor.py",
+          "id": "totally_reset_cursor.py::get_user_documents_path"
+        },
+        {
+          "type": "function",
+          "name": "get_cursor_paths",
+          "file": "totally_reset_cursor.py",
+          "id": "totally_reset_cursor.py::get_cursor_paths"
+        },
+        {
+          "type": "function",
+          "name": "get_cursor_machine_id_path",
+          "file": "totally_reset_cursor.py",
+          "id": "totally_reset_cursor.py::get_cursor_machine_id_path"
+        },
+        {
+          "type": "function",
+          "name": "get_workbench_cursor_path",
+          "file": "totally_reset_cursor.py",
+          "id": "totally_reset_cursor.py::get_workbench_cursor_path"
+        },
+        {
+          "type": "function",
+          "name": "version_check",
+          "file": "totally_reset_cursor.py",
+          "id": "totally_reset_cursor.py::version_check"
+        },
+        {
+          "type": "function",
+          "name": "parse_version",
+          "file": "totally_reset_cursor.py",
+          "id": "totally_reset_cursor.py::parse_version"
+        },
+        {
+          "type": "function",
+          "name": "check_cursor_version",
+          "file": "totally_reset_cursor.py",
+          "id": "totally_reset_cursor.py::check_cursor_version"
+        },
+        {
+          "type": "function",
+          "name": "modify_workbench_js",
+          "file": "totally_reset_cursor.py",
+          "id": "totally_reset_cursor.py::modify_workbench_js"
+        },
+        {
+          "type": "function",
+          "name": "modify_main_js",
+          "file": "totally_reset_cursor.py",
+          "id": "totally_reset_cursor.py::modify_main_js"
+        },
+        {
+          "type": "function",
+          "name": "patch_cursor_get_machine_id",
+          "file": "totally_reset_cursor.py",
+          "id": "totally_reset_cursor.py::patch_cursor_get_machine_id"
+        },
+        {
+          "type": "function",
+          "name": "__init__",
+          "file": "totally_reset_cursor.py",
+          "id": "totally_reset_cursor.py::__init__"
+        },
+        {
+          "type": "function",
+          "name": "generate_new_ids",
+          "file": "totally_reset_cursor.py",
+          "id": "totally_reset_cursor.py::generate_new_ids"
+        },
+        {
+          "type": "function",
+          "name": "update_sqlite_db",
+          "file": "totally_reset_cursor.py",
+          "id": "totally_reset_cursor.py::update_sqlite_db"
+        },
+        {
+          "type": "function",
+          "name": "update_system_ids",
+          "file": "totally_reset_cursor.py",
+          "id": "totally_reset_cursor.py::update_system_ids"
+        },
+        {
+          "type": "function",
+          "name": "_update_windows_machine_guid",
+          "file": "totally_reset_cursor.py",
+          "id": "totally_reset_cursor.py::_update_windows_machine_guid"
+        },
+        {
+          "type": "function",
+          "name": "_update_windows_machine_id",
+          "file": "totally_reset_cursor.py",
+          "id": "totally_reset_cursor.py::_update_windows_machine_id"
+        },
+        {
+          "type": "function",
+          "name": "_update_macos_platform_uuid",
+          "file": "totally_reset_cursor.py",
+          "id": "totally_reset_cursor.py::_update_macos_platform_uuid"
+        },
+        {
+          "type": "function",
+          "name": "reset_machine_ids",
+          "file": "totally_reset_cursor.py",
+          "id": "totally_reset_cursor.py::reset_machine_ids"
+        },
+        {
+          "type": "function",
+          "name": "update_machine_id_file",
+          "file": "totally_reset_cursor.py",
+          "id": "totally_reset_cursor.py::update_machine_id_file"
+        },
+        {
+          "type": "function",
+          "name": "run",
+          "file": "totally_reset_cursor.py",
+          "id": "totally_reset_cursor.py::run"
+        },
+        {
+          "type": "class",
+          "name": "MachineIDResetter",
+          "file": "totally_reset_cursor.py",
+          "id": "totally_reset_cursor.py::MachineIDResetter"
+        },
+        {
+          "type": "file",
+          "language": ".py",
+          "id": "delete_cursor_google.py"
+        },
+        {
+          "type": "function",
+          "name": "__init__",
+          "file": "delete_cursor_google.py",
+          "id": "delete_cursor_google.py::__init__"
+        },
+        {
+          "type": "function",
+          "name": "delete_google_account",
+          "file": "delete_cursor_google.py",
+          "id": "delete_cursor_google.py::delete_google_account"
+        },
+        {
+          "type": "function",
+          "name": "main",
+          "file": "delete_cursor_google.py",
+          "id": "delete_cursor_google.py::main"
+        },
+        {
+          "type": "class",
+          "name": "CursorGoogleAccountDeleter",
+          "file": "delete_cursor_google.py",
+          "id": "delete_cursor_google.py::CursorGoogleAccountDeleter"
+        },
+        {
+          "type": "file",
+          "language": ".py",
+          "id": "quit_cursor.py"
+        },
+        {
+          "type": "function",
+          "name": "__init__",
+          "file": "quit_cursor.py",
+          "id": "quit_cursor.py::__init__"
+        },
+        {
+          "type": "function",
+          "name": "quit_cursor",
+          "file": "quit_cursor.py",
+          "id": "quit_cursor.py::quit_cursor"
+        },
+        {
+          "type": "class",
+          "name": "CursorQuitter",
+          "file": "quit_cursor.py",
+          "id": "quit_cursor.py::CursorQuitter"
+        },
+        {
+          "type": "file",
+          "language": ".py",
+          "id": "restore_machine_id.py"
+        },
+        {
+          "type": "function",
+          "name": "__init__",
+          "file": "restore_machine_id.py",
+          "id": "restore_machine_id.py::__init__"
+        },
+        {
+          "type": "function",
+          "name": "find_backups",
+          "file": "restore_machine_id.py",
+          "id": "restore_machine_id.py::find_backups"
+        },
+        {
+          "type": "function",
+          "name": "list_backups",
+          "file": "restore_machine_id.py",
+          "id": "restore_machine_id.py::list_backups"
+        },
+        {
+          "type": "function",
+          "name": "select_backup",
+          "file": "restore_machine_id.py",
+          "id": "restore_machine_id.py::select_backup"
+        },
+        {
+          "type": "function",
+          "name": "extract_ids_from_backup",
+          "file": "restore_machine_id.py",
+          "id": "restore_machine_id.py::extract_ids_from_backup"
+        },
+        {
+          "type": "function",
+          "name": "update_current_file",
+          "file": "restore_machine_id.py",
+          "id": "restore_machine_id.py::update_current_file"
+        },
+        {
+          "type": "function",
+          "name": "update_sqlite_db",
+          "file": "restore_machine_id.py",
+          "id": "restore_machine_id.py::update_sqlite_db"
+        },
+        {
+          "type": "function",
+          "name": "update_machine_id_file",
+          "file": "restore_machine_id.py",
+          "id": "restore_machine_id.py::update_machine_id_file"
+        },
+        {
+          "type": "function",
+          "name": "update_system_ids",
+          "file": "restore_machine_id.py",
+          "id": "restore_machine_id.py::update_system_ids"
+        },
+        {
+          "type": "function",
+          "name": "_update_windows_system_ids",
+          "file": "restore_machine_id.py",
+          "id": "restore_machine_id.py::_update_windows_system_ids"
+        },
+        {
+          "type": "function",
+          "name": "_update_macos_system_ids",
+          "file": "restore_machine_id.py",
+          "id": "restore_machine_id.py::_update_macos_system_ids"
+        },
+        {
+          "type": "function",
+          "name": "restore_machine_ids",
+          "file": "restore_machine_id.py",
+          "id": "restore_machine_id.py::restore_machine_ids"
+        },
+        {
+          "type": "function",
+          "name": "run",
+          "file": "restore_machine_id.py",
+          "id": "restore_machine_id.py::run"
+        },
+        {
+          "type": "class",
+          "name": "ConfigError",
+          "file": "restore_machine_id.py",
+          "id": "restore_machine_id.py::ConfigError"
+        },
+        {
+          "type": "class",
+          "name": "MachineIDRestorer",
+          "file": "restore_machine_id.py",
+          "id": "restore_machine_id.py::MachineIDRestorer"
+        },
+        {
+          "type": "file",
+          "language": ".py",
+          "id": "get_user_token.py"
+        },
+        {
+          "type": "function",
+          "name": "refresh_token",
+          "file": "get_user_token.py",
+          "id": "get_user_token.py::refresh_token"
+        },
+        {
+          "type": "function",
+          "name": "get_token_from_cookie",
+          "file": "get_user_token.py",
+          "id": "get_user_token.py::get_token_from_cookie"
+        },
+        {
+          "type": "file",
+          "language": ".py",
+          "id": "main.py"
+        },
+        {
+          "type": "function",
+          "name": "is_frozen",
+          "file": "main.py",
+          "id": "main.py::is_frozen"
+        },
+        {
+          "type": "function",
+          "name": "is_admin",
+          "file": "main.py",
+          "id": "main.py::is_admin"
+        },
+        {
+          "type": "function",
+          "name": "run_as_admin",
+          "file": "main.py",
+          "id": "main.py::run_as_admin"
+        },
+        {
+          "type": "function",
+          "name": "__init__",
+          "file": "main.py",
+          "id": "main.py::__init__"
+        },
+        {
+          "type": "function",
+          "name": "detect_system_language",
+          "file": "main.py",
+          "id": "main.py::detect_system_language"
+        },
+        {
+          "type": "function",
+          "name": "_detect_windows_language",
+          "file": "main.py",
+          "id": "main.py::_detect_windows_language"
+        },
+        {
+          "type": "function",
+          "name": "_detect_unix_language",
+          "file": "main.py",
+          "id": "main.py::_detect_unix_language"
+        },
+        {
+          "type": "function",
+          "name": "download_language_file",
+          "file": "main.py",
+          "id": "main.py::download_language_file"
+        },
+        {
+          "type": "function",
+          "name": "load_translations",
+          "file": "main.py",
+          "id": "main.py::load_translations"
+        },
+        {
+          "type": "function",
+          "name": "fix_arabic",
+          "file": "main.py",
+          "id": "main.py::fix_arabic"
+        },
+        {
+          "type": "function",
+          "name": "get",
+          "file": "main.py",
+          "id": "main.py::get"
+        },
+        {
+          "type": "function",
+          "name": "_get_translation",
+          "file": "main.py",
+          "id": "main.py::_get_translation"
+        },
+        {
+          "type": "function",
+          "name": "set_language",
+          "file": "main.py",
+          "id": "main.py::set_language"
+        },
+        {
+          "type": "function",
+          "name": "get_available_languages",
+          "file": "main.py",
+          "id": "main.py::get_available_languages"
+        },
+        {
+          "type": "function",
+          "name": "print_menu",
+          "file": "main.py",
+          "id": "main.py::print_menu"
+        },
+        {
+          "type": "function",
+          "name": "get_display_width",
+          "file": "main.py",
+          "id": "main.py::get_display_width"
+        },
+        {
+          "type": "function",
+          "name": "select_language",
+          "file": "main.py",
+          "id": "main.py::select_language"
+        },
+        {
+          "type": "function",
+          "name": "check_latest_version",
+          "file": "main.py",
+          "id": "main.py::check_latest_version"
+        },
+        {
+          "type": "function",
+          "name": "parse_version",
+          "file": "main.py",
+          "id": "main.py::parse_version"
+        },
+        {
+          "type": "function",
+          "name": "main",
+          "file": "main.py",
+          "id": "main.py::main"
+        },
+        {
+          "type": "class",
+          "name": "Translator",
+          "file": "main.py",
+          "id": "main.py::Translator"
+        },
+        {
+          "type": "file",
+          "language": ".py",
+          "id": "email_tabs/tempmail_plus_tab.py"
+        },
+        {
+          "type": "function",
+          "name": "__init__",
+          "file": "email_tabs/tempmail_plus_tab.py",
+          "id": "email_tabs/tempmail_plus_tab.py::__init__"
+        },
+        {
+          "type": "function",
+          "name": "refresh_inbox",
+          "file": "email_tabs/tempmail_plus_tab.py",
+          "id": "email_tabs/tempmail_plus_tab.py::refresh_inbox"
+        },
+        {
+          "type": "function",
+          "name": "check_for_cursor_email",
+          "file": "email_tabs/tempmail_plus_tab.py",
+          "id": "email_tabs/tempmail_plus_tab.py::check_for_cursor_email"
+        },
+        {
+          "type": "function",
+          "name": "_check_email_once",
+          "file": "email_tabs/tempmail_plus_tab.py",
+          "id": "email_tabs/tempmail_plus_tab.py::_check_email_once"
+        },
+        {
+          "type": "function",
+          "name": "_extract_verification_code",
+          "file": "email_tabs/tempmail_plus_tab.py",
+          "id": "email_tabs/tempmail_plus_tab.py::_extract_verification_code"
+        },
+        {
+          "type": "function",
+          "name": "get_verification_code",
+          "file": "email_tabs/tempmail_plus_tab.py",
+          "id": "email_tabs/tempmail_plus_tab.py::get_verification_code"
+        },
+        {
+          "type": "class",
+          "name": "TempMailPlusTab",
+          "file": "email_tabs/tempmail_plus_tab.py",
+          "id": "email_tabs/tempmail_plus_tab.py::TempMailPlusTab"
+        },
+        {
+          "type": "file",
+          "language": ".py",
+          "id": "email_tabs/email_tab_interface.py"
+        },
+        {
+          "type": "function",
+          "name": "refresh_inbox",
+          "file": "email_tabs/email_tab_interface.py",
+          "id": "email_tabs/email_tab_interface.py::refresh_inbox"
+        },
+        {
+          "type": "function",
+          "name": "check_for_cursor_email",
+          "file": "email_tabs/email_tab_interface.py",
+          "id": "email_tabs/email_tab_interface.py::check_for_cursor_email"
+        },
+        {
+          "type": "function",
+          "name": "get_verification_code",
+          "file": "email_tabs/email_tab_interface.py",
+          "id": "email_tabs/email_tab_interface.py::get_verification_code"
+        },
+        {
+          "type": "class",
+          "name": "EmailTabInterface",
+          "file": "email_tabs/email_tab_interface.py",
+          "id": "email_tabs/email_tab_interface.py::EmailTabInterface"
+        }
+      ],
+      "links": [
+        {
+          "relationship": "defines",
+          "source": "config.py",
+          "target": "config.py::setup_config"
+        },
+        {
+          "relationship": "defines",
+          "source": "config.py",
+          "target": "config.py::print_config"
+        },
+        {
+          "relationship": "defines",
+          "source": "config.py",
+          "target": "config.py::force_update_config"
+        },
+        {
+          "relationship": "defines",
+          "source": "config.py",
+          "target": "config.py::get_config"
+        },
+        {
+          "relationship": "defines",
+          "source": "manual_custom_auth.py",
+          "target": "manual_custom_auth.py::generate_random_email"
+        },
+        {
+          "relationship": "defines",
+          "source": "manual_custom_auth.py",
+          "target": "manual_custom_auth.py::main"
+        },
+        {
+          "relationship": "imports",
+          "module": "check_user_authorized",
+          "source": "manual_custom_auth.py",
+          "target": "check_user_authorized.py"
+        },
+        {
+          "relationship": "defines",
+          "source": "cursor_auth.py",
+          "target": "cursor_auth.py::__init__"
+        },
+        {
+          "relationship": "defines",
+          "source": "cursor_auth.py",
+          "target": "cursor_auth.py::update_auth"
+        },
+        {
+          "relationship": "defines",
+          "source": "cursor_auth.py",
+          "target": "cursor_auth.py::CursorAuth"
+        },
+        {
+          "relationship": "defines",
+          "source": "bypass_version.py",
+          "target": "bypass_version.py::get_product_json_path"
+        },
+        {
+          "relationship": "defines",
+          "source": "bypass_version.py",
+          "target": "bypass_version.py::compare_versions"
+        },
+        {
+          "relationship": "defines",
+          "source": "bypass_version.py",
+          "target": "bypass_version.py::bypass_version"
+        },
+        {
+          "relationship": "defines",
+          "source": "bypass_version.py",
+          "target": "bypass_version.py::main"
+        },
+        {
+          "relationship": "defines",
+          "source": "cursor_register_manual.py",
+          "target": "cursor_register_manual.py::__init__"
+        },
+        {
+          "relationship": "defines",
+          "source": "cursor_register_manual.py",
+          "target": "cursor_register_manual.py::_generate_password"
+        },
+        {
+          "relationship": "defines",
+          "source": "cursor_register_manual.py",
+          "target": "cursor_register_manual.py::setup_email"
+        },
+        {
+          "relationship": "defines",
+          "source": "cursor_register_manual.py",
+          "target": "cursor_register_manual.py::get_verification_code"
+        },
+        {
+          "relationship": "defines",
+          "source": "cursor_register_manual.py",
+          "target": "cursor_register_manual.py::register_cursor"
+        },
+        {
+          "relationship": "defines",
+          "source": "cursor_register_manual.py",
+          "target": "cursor_register_manual.py::_get_account_info"
+        },
+        {
+          "relationship": "defines",
+          "source": "cursor_register_manual.py",
+          "target": "cursor_register_manual.py::_save_account_info"
+        },
+        {
+          "relationship": "defines",
+          "source": "cursor_register_manual.py",
+          "target": "cursor_register_manual.py::start"
+        },
+        {
+          "relationship": "defines",
+          "source": "cursor_register_manual.py",
+          "target": "cursor_register_manual.py::update_cursor_auth"
+        },
+        {
+          "relationship": "defines",
+          "source": "cursor_register_manual.py",
+          "target": "cursor_register_manual.py::main"
+        },
+        {
+          "relationship": "defines",
+          "source": "cursor_register_manual.py",
+          "target": "cursor_register_manual.py::CursorRegistration"
+        },
+        {
+          "relationship": "imports",
+          "module": "new_signup",
+          "source": "cursor_register_manual.py",
+          "target": "new_signup.py"
+        },
+        {
+          "relationship": "imports",
+          "module": "main",
+          "source": "cursor_register_manual.py",
+          "target": "main.py"
+        },
+        {
+          "relationship": "defines",
+          "source": "logo.py",
+          "target": "logo.py::get_terminal_width"
+        },
+        {
+          "relationship": "defines",
+          "source": "logo.py",
+          "target": "logo.py::center_multiline_text"
+        },
+        {
+          "relationship": "defines",
+          "source": "logo.py",
+          "target": "logo.py::print_logo"
+        },
+        {
+          "relationship": "imports",
+          "module": "re",
+          "source": "logo.py",
+          "target": "cursor_register_manual.py"
+        },
+        {
+          "relationship": "defines",
+          "source": "bypass_token_limit.py",
+          "target": "bypass_token_limit.py::get_user_documents_path"
+        },
+        {
+          "relationship": "defines",
+          "source": "bypass_token_limit.py",
+          "target": "bypass_token_limit.py::get_workbench_cursor_path"
+        },
+        {
+          "relationship": "defines",
+          "source": "bypass_token_limit.py",
+          "target": "bypass_token_limit.py::modify_workbench_js"
+        },
+        {
+          "relationship": "defines",
+          "source": "bypass_token_limit.py",
+          "target": "bypass_token_limit.py::run"
+        },
+        {
+          "relationship": "imports",
+          "module": "main",
+          "source": "bypass_token_limit.py",
+          "target": "main.py"
+        },
+        {
+          "relationship": "defines",
+          "source": "check_user_authorized.py",
+          "target": "check_user_authorized.py::generate_hashed64_hex"
+        },
+        {
+          "relationship": "defines",
+          "source": "check_user_authorized.py",
+          "target": "check_user_authorized.py::obfuscate_bytes"
+        },
+        {
+          "relationship": "defines",
+          "source": "check_user_authorized.py",
+          "target": "check_user_authorized.py::generate_cursor_checksum"
+        },
+        {
+          "relationship": "defines",
+          "source": "check_user_authorized.py",
+          "target": "check_user_authorized.py::check_user_authorized"
+        },
+        {
+          "relationship": "defines",
+          "source": "check_user_authorized.py",
+          "target": "check_user_authorized.py::run"
+        },
+        {
+          "relationship": "defines",
+          "source": "check_user_authorized.py",
+          "target": "check_user_authorized.py::main"
+        },
+        {
+          "relationship": "defines",
+          "source": "new_signup.py",
+          "target": "new_signup.py::cleanup_chrome_processes"
+        },
+        {
+          "relationship": "defines",
+          "source": "new_signup.py",
+          "target": "new_signup.py::signal_handler"
+        },
+        {
+          "relationship": "defines",
+          "source": "new_signup.py",
+          "target": "new_signup.py::simulate_human_input"
+        },
+        {
+          "relationship": "defines",
+          "source": "new_signup.py",
+          "target": "new_signup.py::fill_signup_form"
+        },
+        {
+          "relationship": "defines",
+          "source": "new_signup.py",
+          "target": "new_signup.py::get_user_documents_path"
+        },
+        {
+          "relationship": "defines",
+          "source": "new_signup.py",
+          "target": "new_signup.py::get_random_wait_time"
+        },
+        {
+          "relationship": "defines",
+          "source": "new_signup.py",
+          "target": "new_signup.py::setup_driver"
+        },
+        {
+          "relationship": "defines",
+          "source": "new_signup.py",
+          "target": "new_signup.py::handle_turnstile"
+        },
+        {
+          "relationship": "defines",
+          "source": "new_signup.py",
+          "target": "new_signup.py::check_verification_success"
+        },
+        {
+          "relationship": "defines",
+          "source": "new_signup.py",
+          "target": "new_signup.py::generate_password"
+        },
+        {
+          "relationship": "defines",
+          "source": "new_signup.py",
+          "target": "new_signup.py::fill_password"
+        },
+        {
+          "relationship": "defines",
+          "source": "new_signup.py",
+          "target": "new_signup.py::handle_verification_code"
+        },
+        {
+          "relationship": "defines",
+          "source": "new_signup.py",
+          "target": "new_signup.py::handle_sign_in"
+        },
+        {
+          "relationship": "defines",
+          "source": "new_signup.py",
+          "target": "new_signup.py::main"
+        },
+        {
+          "relationship": "imports",
+          "module": "utils",
+          "source": "new_signup.py",
+          "target": "utils.py"
+        },
+        {
+          "relationship": "defines",
+          "source": "fill_missing_translations.py",
+          "target": "fill_missing_translations.py::get_keys"
+        },
+        {
+          "relationship": "defines",
+          "source": "fill_missing_translations.py",
+          "target": "fill_missing_translations.py::get_by_path"
+        },
+        {
+          "relationship": "defines",
+          "source": "fill_missing_translations.py",
+          "target": "fill_missing_translations.py::set_by_path"
+        },
+        {
+          "relationship": "defines",
+          "source": "fill_missing_translations.py",
+          "target": "fill_missing_translations.py::get_google_lang_code"
+        },
+        {
+          "relationship": "defines",
+          "source": "fill_missing_translations.py",
+          "target": "fill_missing_translations.py::translate"
+        },
+        {
+          "relationship": "defines",
+          "source": "fill_missing_translations.py",
+          "target": "fill_missing_translations.py::translate_web_scraping"
+        },
+        {
+          "relationship": "defines",
+          "source": "fill_missing_translations.py",
+          "target": "fill_missing_translations.py::process_language"
+        },
+        {
+          "relationship": "defines",
+          "source": "fill_missing_translations.py",
+          "target": "fill_missing_translations.py::main"
+        },
+        {
+          "relationship": "imports",
+          "module": "re",
+          "source": "fill_missing_translations.py",
+          "target": "cursor_register_manual.py"
+        },
+        {
+          "relationship": "defines",
+          "source": "account_manager.py",
+          "target": "account_manager.py::__init__"
+        },
+        {
+          "relationship": "defines",
+          "source": "account_manager.py",
+          "target": "account_manager.py::save_account_info"
+        },
+        {
+          "relationship": "defines",
+          "source": "account_manager.py",
+          "target": "account_manager.py::get_last_email_domain"
+        },
+        {
+          "relationship": "defines",
+          "source": "account_manager.py",
+          "target": "account_manager.py::suggest_email"
+        },
+        {
+          "relationship": "defines",
+          "source": "account_manager.py",
+          "target": "account_manager.py::AccountManager"
+        },
+        {
+          "relationship": "imports",
+          "module": "re",
+          "source": "account_manager.py",
+          "target": "cursor_register_manual.py"
+        },
+        {
+          "relationship": "defines",
+          "source": "build.py",
+          "target": "build.py::__init__"
+        },
+        {
+          "relationship": "defines",
+          "source": "build.py",
+          "target": "build.py::start"
+        },
+        {
+          "relationship": "defines",
+          "source": "build.py",
+          "target": "build.py::stop"
+        },
+        {
+          "relationship": "defines",
+          "source": "build.py",
+          "target": "build.py::_animate"
+        },
+        {
+          "relationship": "defines",
+          "source": "build.py",
+          "target": "build.py::progress_bar"
+        },
+        {
+          "relationship": "defines",
+          "source": "build.py",
+          "target": "build.py::simulate_progress"
+        },
+        {
+          "relationship": "defines",
+          "source": "build.py",
+          "target": "build.py::build"
+        },
+        {
+          "relationship": "defines",
+          "source": "build.py",
+          "target": "build.py::LoadingAnimation"
+        },
+        {
+          "relationship": "defines",
+          "source": "reset_machine_manual.py",
+          "target": "reset_machine_manual.py::get_user_documents_path"
+        },
+        {
+          "relationship": "defines",
+          "source": "reset_machine_manual.py",
+          "target": "reset_machine_manual.py::get_cursor_paths"
+        },
+        {
+          "relationship": "defines",
+          "source": "reset_machine_manual.py",
+          "target": "reset_machine_manual.py::get_cursor_machine_id_path"
+        },
+        {
+          "relationship": "defines",
+          "source": "reset_machine_manual.py",
+          "target": "reset_machine_manual.py::get_workbench_cursor_path"
+        },
+        {
+          "relationship": "defines",
+          "source": "reset_machine_manual.py",
+          "target": "reset_machine_manual.py::version_check"
+        },
+        {
+          "relationship": "defines",
+          "source": "reset_machine_manual.py",
+          "target": "reset_machine_manual.py::parse_version"
+        },
+        {
+          "relationship": "defines",
+          "source": "reset_machine_manual.py",
+          "target": "reset_machine_manual.py::check_cursor_version"
+        },
+        {
+          "relationship": "defines",
+          "source": "reset_machine_manual.py",
+          "target": "reset_machine_manual.py::modify_workbench_js"
+        },
+        {
+          "relationship": "defines",
+          "source": "reset_machine_manual.py",
+          "target": "reset_machine_manual.py::modify_main_js"
+        },
+        {
+          "relationship": "defines",
+          "source": "reset_machine_manual.py",
+          "target": "reset_machine_manual.py::patch_cursor_get_machine_id"
+        },
+        {
+          "relationship": "defines",
+          "source": "reset_machine_manual.py",
+          "target": "reset_machine_manual.py::__init__"
+        },
+        {
+          "relationship": "defines",
+          "source": "reset_machine_manual.py",
+          "target": "reset_machine_manual.py::generate_new_ids"
+        },
+        {
+          "relationship": "defines",
+          "source": "reset_machine_manual.py",
+          "target": "reset_machine_manual.py::update_sqlite_db"
+        },
+        {
+          "relationship": "defines",
+          "source": "reset_machine_manual.py",
+          "target": "reset_machine_manual.py::update_system_ids"
+        },
+        {
+          "relationship": "defines",
+          "source": "reset_machine_manual.py",
+          "target": "reset_machine_manual.py::_update_windows_machine_guid"
+        },
+        {
+          "relationship": "defines",
+          "source": "reset_machine_manual.py",
+          "target": "reset_machine_manual.py::_update_windows_machine_id"
+        },
+        {
+          "relationship": "defines",
+          "source": "reset_machine_manual.py",
+          "target": "reset_machine_manual.py::_update_macos_platform_uuid"
+        },
+        {
+          "relationship": "defines",
+          "source": "reset_machine_manual.py",
+          "target": "reset_machine_manual.py::reset_machine_ids"
+        },
+        {
+          "relationship": "defines",
+          "source": "reset_machine_manual.py",
+          "target": "reset_machine_manual.py::update_machine_id_file"
+        },
+        {
+          "relationship": "defines",
+          "source": "reset_machine_manual.py",
+          "target": "reset_machine_manual.py::run"
+        },
+        {
+          "relationship": "defines",
+          "source": "reset_machine_manual.py",
+          "target": "reset_machine_manual.py::MachineIDResetter"
+        },
+        {
+          "relationship": "imports",
+          "module": "re",
+          "source": "reset_machine_manual.py",
+          "target": "cursor_register_manual.py"
+        },
+        {
+          "relationship": "imports",
+          "module": "main",
+          "source": "reset_machine_manual.py",
+          "target": "main.py"
+        },
+        {
+          "relationship": "defines",
+          "source": "utils.py",
+          "target": "utils.py::get_user_documents_path"
+        },
+        {
+          "relationship": "defines",
+          "source": "utils.py",
+          "target": "utils.py::get_default_driver_path"
+        },
+        {
+          "relationship": "defines",
+          "source": "utils.py",
+          "target": "utils.py::get_default_chrome_driver_path"
+        },
+        {
+          "relationship": "defines",
+          "source": "utils.py",
+          "target": "utils.py::get_default_edge_driver_path"
+        },
+        {
+          "relationship": "defines",
+          "source": "utils.py",
+          "target": "utils.py::get_default_firefox_driver_path"
+        },
+        {
+          "relationship": "defines",
+          "source": "utils.py",
+          "target": "utils.py::get_default_brave_driver_path"
+        },
+        {
+          "relationship": "defines",
+          "source": "utils.py",
+          "target": "utils.py::get_default_browser_path"
+        },
+        {
+          "relationship": "defines",
+          "source": "utils.py",
+          "target": "utils.py::get_linux_cursor_path"
+        },
+        {
+          "relationship": "defines",
+          "source": "utils.py",
+          "target": "utils.py::get_random_wait_time"
+        },
+        {
+          "relationship": "defines",
+          "source": "cursor_acc_info.py",
+          "target": "cursor_acc_info.py::get_proxy"
+        },
+        {
+          "relationship": "defines",
+          "source": "cursor_acc_info.py",
+          "target": "cursor_acc_info.py::get_usage"
+        },
+        {
+          "relationship": "defines",
+          "source": "cursor_acc_info.py",
+          "target": "cursor_acc_info.py::get_stripe_profile"
+        },
+        {
+          "relationship": "defines",
+          "source": "cursor_acc_info.py",
+          "target": "cursor_acc_info.py::get_token_from_config"
+        },
+        {
+          "relationship": "defines",
+          "source": "cursor_acc_info.py",
+          "target": "cursor_acc_info.py::get_token_from_storage"
+        },
+        {
+          "relationship": "defines",
+          "source": "cursor_acc_info.py",
+          "target": "cursor_acc_info.py::get_token_from_sqlite"
+        },
+        {
+          "relationship": "defines",
+          "source": "cursor_acc_info.py",
+          "target": "cursor_acc_info.py::get_token_from_session"
+        },
+        {
+          "relationship": "defines",
+          "source": "cursor_acc_info.py",
+          "target": "cursor_acc_info.py::get_token"
+        },
+        {
+          "relationship": "defines",
+          "source": "cursor_acc_info.py",
+          "target": "cursor_acc_info.py::format_subscription_type"
+        },
+        {
+          "relationship": "defines",
+          "source": "cursor_acc_info.py",
+          "target": "cursor_acc_info.py::get_email_from_storage"
+        },
+        {
+          "relationship": "defines",
+          "source": "cursor_acc_info.py",
+          "target": "cursor_acc_info.py::get_email_from_sqlite"
+        },
+        {
+          "relationship": "defines",
+          "source": "cursor_acc_info.py",
+          "target": "cursor_acc_info.py::display_account_info"
+        },
+        {
+          "relationship": "defines",
+          "source": "cursor_acc_info.py",
+          "target": "cursor_acc_info.py::get_display_width"
+        },
+        {
+          "relationship": "defines",
+          "source": "cursor_acc_info.py",
+          "target": "cursor_acc_info.py::main"
+        },
+        {
+          "relationship": "defines",
+          "source": "cursor_acc_info.py",
+          "target": "cursor_acc_info.py::Config"
+        },
+        {
+          "relationship": "defines",
+          "source": "cursor_acc_info.py",
+          "target": "cursor_acc_info.py::UsageManager"
+        },
+        {
+          "relationship": "imports",
+          "module": "re",
+          "source": "cursor_acc_info.py",
+          "target": "cursor_register_manual.py"
+        },
+        {
+          "relationship": "defines",
+          "source": "oauth_auth.py",
+          "target": "oauth_auth.py::__init__"
+        },
+        {
+          "relationship": "defines",
+          "source": "oauth_auth.py",
+          "target": "oauth_auth.py::_get_available_profiles"
+        },
+        {
+          "relationship": "defines",
+          "source": "oauth_auth.py",
+          "target": "oauth_auth.py::_select_profile"
+        },
+        {
+          "relationship": "defines",
+          "source": "oauth_auth.py",
+          "target": "oauth_auth.py::setup_browser"
+        },
+        {
+          "relationship": "defines",
+          "source": "oauth_auth.py",
+          "target": "oauth_auth.py::_kill_browser_processes"
+        },
+        {
+          "relationship": "defines",
+          "source": "oauth_auth.py",
+          "target": "oauth_auth.py::_get_user_data_directory"
+        },
+        {
+          "relationship": "defines",
+          "source": "oauth_auth.py",
+          "target": "oauth_auth.py::_get_browser_path"
+        },
+        {
+          "relationship": "defines",
+          "source": "oauth_auth.py",
+          "target": "oauth_auth.py::_configure_browser_options"
+        },
+        {
+          "relationship": "defines",
+          "source": "oauth_auth.py",
+          "target": "oauth_auth.py::_fix_chrome_permissions"
+        },
+        {
+          "relationship": "defines",
+          "source": "oauth_auth.py",
+          "target": "oauth_auth.py::handle_google_auth"
+        },
+        {
+          "relationship": "defines",
+          "source": "oauth_auth.py",
+          "target": "oauth_auth.py::_wait_for_auth"
+        },
+        {
+          "relationship": "defines",
+          "source": "oauth_auth.py",
+          "target": "oauth_auth.py::check_usage_limits"
+        },
+        {
+          "relationship": "defines",
+          "source": "oauth_auth.py",
+          "target": "oauth_auth.py::handle_github_auth"
+        },
+        {
+          "relationship": "defines",
+          "source": "oauth_auth.py",
+          "target": "oauth_auth.py::_handle_oauth"
+        },
+        {
+          "relationship": "defines",
+          "source": "oauth_auth.py",
+          "target": "oauth_auth.py::_extract_auth_info"
+        },
+        {
+          "relationship": "defines",
+          "source": "oauth_auth.py",
+          "target": "oauth_auth.py::_delete_current_account"
+        },
+        {
+          "relationship": "defines",
+          "source": "oauth_auth.py",
+          "target": "oauth_auth.py::main"
+        },
+        {
+          "relationship": "defines",
+          "source": "oauth_auth.py",
+          "target": "oauth_auth.py::OAuthHandler"
+        },
+        {
+          "relationship": "defines",
+          "source": "disable_auto_update.py",
+          "target": "disable_auto_update.py::__init__"
+        },
+        {
+          "relationship": "defines",
+          "source": "disable_auto_update.py",
+          "target": "disable_auto_update.py::_remove_update_url"
+        },
+        {
+          "relationship": "defines",
+          "source": "disable_auto_update.py",
+          "target": "disable_auto_update.py::_kill_cursor_processes"
+        },
+        {
+          "relationship": "defines",
+          "source": "disable_auto_update.py",
+          "target": "disable_auto_update.py::_remove_updater_directory"
+        },
+        {
+          "relationship": "defines",
+          "source": "disable_auto_update.py",
+          "target": "disable_auto_update.py::_clear_update_yml_file"
+        },
+        {
+          "relationship": "defines",
+          "source": "disable_auto_update.py",
+          "target": "disable_auto_update.py::_create_blocking_file"
+        },
+        {
+          "relationship": "defines",
+          "source": "disable_auto_update.py",
+          "target": "disable_auto_update.py::disable_auto_update"
+        },
+        {
+          "relationship": "defines",
+          "source": "disable_auto_update.py",
+          "target": "disable_auto_update.py::run"
+        },
+        {
+          "relationship": "defines",
+          "source": "disable_auto_update.py",
+          "target": "disable_auto_update.py::AutoUpdateDisabler"
+        },
+        {
+          "relationship": "imports",
+          "module": "re",
+          "source": "disable_auto_update.py",
+          "target": "cursor_register_manual.py"
+        },
+        {
+          "relationship": "imports",
+          "module": "main",
+          "source": "disable_auto_update.py",
+          "target": "main.py"
+        },
+        {
+          "relationship": "defines",
+          "source": "totally_reset_cursor.py",
+          "target": "totally_reset_cursor.py::get_user_documents_path"
+        },
+        {
+          "relationship": "defines",
+          "source": "totally_reset_cursor.py",
+          "target": "totally_reset_cursor.py::get_cursor_paths"
+        },
+        {
+          "relationship": "defines",
+          "source": "totally_reset_cursor.py",
+          "target": "totally_reset_cursor.py::get_cursor_machine_id_path"
+        },
+        {
+          "relationship": "defines",
+          "source": "totally_reset_cursor.py",
+          "target": "totally_reset_cursor.py::get_workbench_cursor_path"
+        },
+        {
+          "relationship": "defines",
+          "source": "totally_reset_cursor.py",
+          "target": "totally_reset_cursor.py::version_check"
+        },
+        {
+          "relationship": "defines",
+          "source": "totally_reset_cursor.py",
+          "target": "totally_reset_cursor.py::parse_version"
+        },
+        {
+          "relationship": "defines",
+          "source": "totally_reset_cursor.py",
+          "target": "totally_reset_cursor.py::check_cursor_version"
+        },
+        {
+          "relationship": "defines",
+          "source": "totally_reset_cursor.py",
+          "target": "totally_reset_cursor.py::modify_workbench_js"
+        },
+        {
+          "relationship": "defines",
+          "source": "totally_reset_cursor.py",
+          "target": "totally_reset_cursor.py::modify_main_js"
+        },
+        {
+          "relationship": "defines",
+          "source": "totally_reset_cursor.py",
+          "target": "totally_reset_cursor.py::patch_cursor_get_machine_id"
+        },
+        {
+          "relationship": "defines",
+          "source": "totally_reset_cursor.py",
+          "target": "totally_reset_cursor.py::__init__"
+        },
+        {
+          "relationship": "defines",
+          "source": "totally_reset_cursor.py",
+          "target": "totally_reset_cursor.py::generate_new_ids"
+        },
+        {
+          "relationship": "defines",
+          "source": "totally_reset_cursor.py",
+          "target": "totally_reset_cursor.py::update_sqlite_db"
+        },
+        {
+          "relationship": "defines",
+          "source": "totally_reset_cursor.py",
+          "target": "totally_reset_cursor.py::update_system_ids"
+        },
+        {
+          "relationship": "defines",
+          "source": "totally_reset_cursor.py",
+          "target": "totally_reset_cursor.py::_update_windows_machine_guid"
+        },
+        {
+          "relationship": "defines",
+          "source": "totally_reset_cursor.py",
+          "target": "totally_reset_cursor.py::_update_windows_machine_id"
+        },
+        {
+          "relationship": "defines",
+          "source": "totally_reset_cursor.py",
+          "target": "totally_reset_cursor.py::_update_macos_platform_uuid"
+        },
+        {
+          "relationship": "defines",
+          "source": "totally_reset_cursor.py",
+          "target": "totally_reset_cursor.py::reset_machine_ids"
+        },
+        {
+          "relationship": "defines",
+          "source": "totally_reset_cursor.py",
+          "target": "totally_reset_cursor.py::update_machine_id_file"
+        },
+        {
+          "relationship": "defines",
+          "source": "totally_reset_cursor.py",
+          "target": "totally_reset_cursor.py::run"
+        },
+        {
+          "relationship": "defines",
+          "source": "totally_reset_cursor.py",
+          "target": "totally_reset_cursor.py::MachineIDResetter"
+        },
+        {
+          "relationship": "imports",
+          "module": "re",
+          "source": "totally_reset_cursor.py",
+          "target": "cursor_register_manual.py"
+        },
+        {
+          "relationship": "imports",
+          "module": "main",
+          "source": "totally_reset_cursor.py",
+          "target": "main.py"
+        },
+        {
+          "relationship": "defines",
+          "source": "delete_cursor_google.py",
+          "target": "delete_cursor_google.py::__init__"
+        },
+        {
+          "relationship": "defines",
+          "source": "delete_cursor_google.py",
+          "target": "delete_cursor_google.py::delete_google_account"
+        },
+        {
+          "relationship": "defines",
+          "source": "delete_cursor_google.py",
+          "target": "delete_cursor_google.py::main"
+        },
+        {
+          "relationship": "defines",
+          "source": "delete_cursor_google.py",
+          "target": "delete_cursor_google.py::CursorGoogleAccountDeleter"
+        },
+        {
+          "relationship": "defines",
+          "source": "quit_cursor.py",
+          "target": "quit_cursor.py::__init__"
+        },
+        {
+          "relationship": "defines",
+          "source": "quit_cursor.py",
+          "target": "quit_cursor.py::quit_cursor"
+        },
+        {
+          "relationship": "defines",
+          "source": "quit_cursor.py",
+          "target": "quit_cursor.py::CursorQuitter"
+        },
+        {
+          "relationship": "imports",
+          "module": "main",
+          "source": "quit_cursor.py",
+          "target": "main.py"
+        },
+        {
+          "relationship": "defines",
+          "source": "restore_machine_id.py",
+          "target": "restore_machine_id.py::__init__"
+        },
+        {
+          "relationship": "defines",
+          "source": "restore_machine_id.py",
+          "target": "restore_machine_id.py::find_backups"
+        },
+        {
+          "relationship": "defines",
+          "source": "restore_machine_id.py",
+          "target": "restore_machine_id.py::list_backups"
+        },
+        {
+          "relationship": "defines",
+          "source": "restore_machine_id.py",
+          "target": "restore_machine_id.py::select_backup"
+        },
+        {
+          "relationship": "defines",
+          "source": "restore_machine_id.py",
+          "target": "restore_machine_id.py::extract_ids_from_backup"
+        },
+        {
+          "relationship": "defines",
+          "source": "restore_machine_id.py",
+          "target": "restore_machine_id.py::update_current_file"
+        },
+        {
+          "relationship": "defines",
+          "source": "restore_machine_id.py",
+          "target": "restore_machine_id.py::update_sqlite_db"
+        },
+        {
+          "relationship": "defines",
+          "source": "restore_machine_id.py",
+          "target": "restore_machine_id.py::update_machine_id_file"
+        },
+        {
+          "relationship": "defines",
+          "source": "restore_machine_id.py",
+          "target": "restore_machine_id.py::update_system_ids"
+        },
+        {
+          "relationship": "defines",
+          "source": "restore_machine_id.py",
+          "target": "restore_machine_id.py::_update_windows_system_ids"
+        },
+        {
+          "relationship": "defines",
+          "source": "restore_machine_id.py",
+          "target": "restore_machine_id.py::_update_macos_system_ids"
+        },
+        {
+          "relationship": "defines",
+          "source": "restore_machine_id.py",
+          "target": "restore_machine_id.py::restore_machine_ids"
+        },
+        {
+          "relationship": "defines",
+          "source": "restore_machine_id.py",
+          "target": "restore_machine_id.py::run"
+        },
+        {
+          "relationship": "defines",
+          "source": "restore_machine_id.py",
+          "target": "restore_machine_id.py::ConfigError"
+        },
+        {
+          "relationship": "defines",
+          "source": "restore_machine_id.py",
+          "target": "restore_machine_id.py::MachineIDRestorer"
+        },
+        {
+          "relationship": "imports",
+          "module": "re",
+          "source": "restore_machine_id.py",
+          "target": "cursor_register_manual.py"
+        },
+        {
+          "relationship": "imports",
+          "module": "main",
+          "source": "restore_machine_id.py",
+          "target": "main.py"
+        },
+        {
+          "relationship": "defines",
+          "source": "get_user_token.py",
+          "target": "get_user_token.py::refresh_token"
+        },
+        {
+          "relationship": "defines",
+          "source": "get_user_token.py",
+          "target": "get_user_token.py::get_token_from_cookie"
+        },
+        {
+          "relationship": "defines",
+          "source": "main.py",
+          "target": "main.py::is_frozen"
+        },
+        {
+          "relationship": "defines",
+          "source": "main.py",
+          "target": "main.py::is_admin"
+        },
+        {
+          "relationship": "defines",
+          "source": "main.py",
+          "target": "main.py::run_as_admin"
+        },
+        {
+          "relationship": "defines",
+          "source": "main.py",
+          "target": "main.py::__init__"
+        },
+        {
+          "relationship": "defines",
+          "source": "main.py",
+          "target": "main.py::detect_system_language"
+        },
+        {
+          "relationship": "defines",
+          "source": "main.py",
+          "target": "main.py::_detect_windows_language"
+        },
+        {
+          "relationship": "defines",
+          "source": "main.py",
+          "target": "main.py::_detect_unix_language"
+        },
+        {
+          "relationship": "defines",
+          "source": "main.py",
+          "target": "main.py::download_language_file"
+        },
+        {
+          "relationship": "defines",
+          "source": "main.py",
+          "target": "main.py::load_translations"
+        },
+        {
+          "relationship": "defines",
+          "source": "main.py",
+          "target": "main.py::fix_arabic"
+        },
+        {
+          "relationship": "defines",
+          "source": "main.py",
+          "target": "main.py::get"
+        },
+        {
+          "relationship": "defines",
+          "source": "main.py",
+          "target": "main.py::_get_translation"
+        },
+        {
+          "relationship": "defines",
+          "source": "main.py",
+          "target": "main.py::set_language"
+        },
+        {
+          "relationship": "defines",
+          "source": "main.py",
+          "target": "main.py::get_available_languages"
+        },
+        {
+          "relationship": "defines",
+          "source": "main.py",
+          "target": "main.py::print_menu"
+        },
+        {
+          "relationship": "defines",
+          "source": "main.py",
+          "target": "main.py::get_display_width"
+        },
+        {
+          "relationship": "defines",
+          "source": "main.py",
+          "target": "main.py::select_language"
+        },
+        {
+          "relationship": "defines",
+          "source": "main.py",
+          "target": "main.py::check_latest_version"
+        },
+        {
+          "relationship": "defines",
+          "source": "main.py",
+          "target": "main.py::parse_version"
+        },
+        {
+          "relationship": "defines",
+          "source": "main.py",
+          "target": "main.py::main"
+        },
+        {
+          "relationship": "defines",
+          "source": "main.py",
+          "target": "main.py::Translator"
+        },
+        {
+          "relationship": "imports",
+          "module": "bypass_version",
+          "source": "main.py",
+          "target": "bypass_version.py"
+        },
+        {
+          "relationship": "imports",
+          "module": "cursor_register_manual",
+          "source": "main.py",
+          "target": "cursor_register_manual.py"
+        },
+        {
+          "relationship": "imports",
+          "module": "cursor_acc_info",
+          "source": "main.py",
+          "target": "cursor_acc_info.py"
+        },
+        {
+          "relationship": "imports",
+          "module": "reset_machine_manual",
+          "source": "main.py",
+          "target": "reset_machine_manual.py"
+        },
+        {
+          "relationship": "imports",
+          "module": "quit_cursor",
+          "source": "main.py",
+          "target": "quit_cursor.py"
+        },
+        {
+          "relationship": "imports",
+          "module": "oauth_auth",
+          "source": "main.py",
+          "target": "oauth_auth.py"
+        },
+        {
+          "relationship": "imports",
+          "module": "disable_auto_update",
+          "source": "main.py",
+          "target": "disable_auto_update.py"
+        },
+        {
+          "relationship": "imports",
+          "module": "totally_reset_cursor",
+          "source": "main.py",
+          "target": "totally_reset_cursor.py"
+        },
+        {
+          "relationship": "imports",
+          "module": "logo",
+          "source": "main.py",
+          "target": "logo.py"
+        },
+        {
+          "relationship": "imports",
+          "module": "check_user_authorized",
+          "source": "main.py",
+          "target": "check_user_authorized.py"
+        },
+        {
+          "relationship": "imports",
+          "module": "bypass_token_limit",
+          "source": "main.py",
+          "target": "bypass_token_limit.py"
+        },
+        {
+          "relationship": "imports",
+          "module": "restore_machine_id",
+          "source": "main.py",
+          "target": "restore_machine_id.py"
+        },
+        {
+          "relationship": "imports",
+          "module": "delete_cursor_google",
+          "source": "main.py",
+          "target": "delete_cursor_google.py"
+        },
+        {
+          "relationship": "imports",
+          "module": "manual_custom_auth",
+          "source": "main.py",
+          "target": "manual_custom_auth.py"
+        },
+        {
+          "relationship": "defines",
+          "source": "email_tabs/tempmail_plus_tab.py",
+          "target": "email_tabs/tempmail_plus_tab.py::__init__"
+        },
+        {
+          "relationship": "defines",
+          "source": "email_tabs/tempmail_plus_tab.py",
+          "target": "email_tabs/tempmail_plus_tab.py::refresh_inbox"
+        },
+        {
+          "relationship": "defines",
+          "source": "email_tabs/tempmail_plus_tab.py",
+          "target": "email_tabs/tempmail_plus_tab.py::check_for_cursor_email"
+        },
+        {
+          "relationship": "defines",
+          "source": "email_tabs/tempmail_plus_tab.py",
+          "target": "email_tabs/tempmail_plus_tab.py::_check_email_once"
+        },
+        {
+          "relationship": "defines",
+          "source": "email_tabs/tempmail_plus_tab.py",
+          "target": "email_tabs/tempmail_plus_tab.py::_extract_verification_code"
+        },
+        {
+          "relationship": "defines",
+          "source": "email_tabs/tempmail_plus_tab.py",
+          "target": "email_tabs/tempmail_plus_tab.py::get_verification_code"
+        },
+        {
+          "relationship": "defines",
+          "source": "email_tabs/tempmail_plus_tab.py",
+          "target": "email_tabs/tempmail_plus_tab.py::TempMailPlusTab"
+        },
+        {
+          "relationship": "imports",
+          "module": "re",
+          "source": "email_tabs/tempmail_plus_tab.py",
+          "target": "cursor_register_manual.py"
+        },
+        {
+          "relationship": "defines",
+          "source": "email_tabs/email_tab_interface.py",
+          "target": "email_tabs/email_tab_interface.py::refresh_inbox"
+        },
+        {
+          "relationship": "defines",
+          "source": "email_tabs/email_tab_interface.py",
+          "target": "email_tabs/email_tab_interface.py::check_for_cursor_email"
+        },
+        {
+          "relationship": "defines",
+          "source": "email_tabs/email_tab_interface.py",
+          "target": "email_tabs/email_tab_interface.py::get_verification_code"
+        },
+        {
+          "relationship": "defines",
+          "source": "email_tabs/email_tab_interface.py",
+          "target": "email_tabs/email_tab_interface.py::EmailTabInterface"
+        }
+      ]
+    }
+  },
+  "duplication_metrics": {
+    "files_analyzed": 25,
+    "duplicate_pairs_found": 1,
+    "similarity_threshold": 0.85,
+    "shingle_size_k": 5,
+    "duplicates": [
+      {
+        "file_a": "reset_machine_manual.py",
+        "file_b": "totally_reset_cursor.py",
+        "similarity": 0.9062
+      }
+    ]
+  },
+  "analysis_method": "Tree-sitter AST + NetworkX + MinHash (Async - Local Storage)",
+  "excluded_third_party": true,
+  "excluded_tests": false,
+  "analysis_errors": []
+}

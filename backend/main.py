@@ -57,16 +57,16 @@ def on_startup():
     print("Startup complete.")
 
 
-# --- CORS Configuration ---
+# RefractorIQ/backend/main.py
 origins = [
-    "https://fluffy-fortnight-pjr95546qg936qrg-3000.app.github.dev",
+    "https://fluffy-fortnight-pjr95546qg936qrg-3000.app.github.dev", # Frontend Origin
     "http://localhost:3000",
-    "*" # Allow all in dev
+    # "*" # You can keep or remove "*" if the specific origin works
 ]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
-    allow_credentials=True,
+    allow_credentials=True, # Important if you ever use cookies/auth headers
     allow_methods=["*"],
     allow_headers=["*"],
 )
