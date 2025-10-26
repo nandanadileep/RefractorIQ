@@ -10,108 +10,34 @@ import DependencyGraph from './DependencyGraph';
 import 'reactflow/dist/style.css';
 
 
+// --- METRIC_INFO unchanged ---
 const METRIC_INFO = {
-  loc: {
-    title: "Lines of Code",
-    description: "Total number of code lines excluding comments and blank lines. Measured using AST parsing.",
-    interpretation: "Lower is often better for maintainability. Industry average: 10,000-50,000 LOC per project."
-  },
-  todos: {
-    title: "TODOs/FIXMEs/HACKs",
-    description: "Count of TODO, FIXME, and HACK comments in the codebase indicating pending work or technical shortcuts.",
-    interpretation: "Lower is better. High counts may indicate incomplete features or deferred refactoring."
-  },
-  avgComplexity: {
-    title: "Average Cyclomatic Complexity",
-    description: "Average complexity across all functions. Measures the number of independent paths through code.",
-    interpretation: "1-5: Simple, 6-10: Moderate, 11-20: Complex, 21+: Very Complex. Lower is better for maintainability."
-  },
-  debtScore: {
-    title: "Technical Debt Score",
-    description: "Composite score calculated from TODOs (×5), complexity (×2), and LOC (÷1000). Higher scores indicate more technical debt.",
-    interpretation: "<50: Low debt, 50-100: Moderate, 100-200: High, 200+: Critical. Lower is better."
-  },
-  totalFunctions: {
-    title: "Total Functions",
-    description: "Total count of all functions and methods across the codebase including Python functions, JS/TS functions, arrow functions, and class methods.",
-    interpretation: "Indicates codebase size and modularity. No strict good/bad threshold."
-  },
-  filesAnalyzed: {
-    title: "Files Analyzed",
-    description: "Number of source code files successfully parsed and analyzed (.py, .js, .ts, .java).",
-    interpretation: "Should match expected file count. Lower than expected may indicate parsing issues."
-  },
-  maxComplexity: {
-    title: "Maximum Complexity",
-    description: "Highest cyclomatic complexity value found in any single function.",
-    interpretation: "Values >20 indicate functions that should be refactored. Ideal: <10"
-  },
-  minComplexity: {
-    title: "Minimum Complexity",
-    description: "Lowest cyclomatic complexity value found in any single function.",
-    interpretation: "Usually 1 for simple functions. Indicates simplest code unit."
-  },
-  totalFiles: {
-    title: "Total Files",
-    description: "Total number of source code files included in dependency analysis.",
-    interpretation: "Indicates project size. More files require better organization."
-  },
-  depFunctions: {
-    title: "External Dependencies",
-    description: "Count of third-party libraries and external modules imported by the codebase from npm, PyPI, Maven, etc.",
-    interpretation: "Monitor for security and maintenance. Each dependency is a potential risk vector. Fewer dependencies = less complexity."
-  },
-  classes: {
-    title: "Total Classes",
-    description: "Number of class definitions found across the codebase.",
-    interpretation: "Indicates OOP usage. Higher doesn't mean better - depends on design approach."
-  },
-  circularDeps: {
-    title: "Circular Dependencies",
-    description: "Number of circular dependency chains detected where files depend on each other in a cycle.",
-    interpretation: "0 is ideal. Any circular dependencies should be refactored to prevent maintenance issues."
-  },
-  excludeThirdParty: {
-    title: "Exclude Third-Party Libraries",
-    description: "When enabled, excludes common third-party library directories (node_modules, venv, site-packages, vendor, etc.) from analysis. On the 'Dependencies' tab, this also hides externally imported libraries.",
-    interpretation: "Enable to focus on your code. Note: Most repos .gitignore these folders, so 'Code Metrics' (like LOC) may not change. The 'Dependencies' tab will still update to hide/show external imports."
-  },
-  excludeTests: {
-    title: "Exclude Test Files",
-    description: "When enabled, excludes files matching common test patterns (e.g., _test.py, .spec.js, test_*, tests/) from all analysis.",
-    interpretation: "Enable this to focus on your application's production code and get a cleaner dependency graph. Disable to include tests in the metrics."
-  },
-  duplicatePairs: {
-    title: "Duplicate Pairs Found",
-    description: "Number of pairs of files found that are considered duplicates based on content similarity (default threshold: 85%).",
-    interpretation: "Uses MinHash (datasketch) to find Jaccard similarity. High numbers of duplicates can indicate copy-paste code and poor abstraction."
-  },
-  duplicationFilesAnalyzed: {
-    title: "Files Analyzed for Duplication",
-    description: "Number of files processed by the duplication engine.",
-    interpretation: "This number may match 'Files Analyzed' in Code Metrics, depending on exclusions."
-  }
+  loc: { title: "Lines of Code", description: "Total number of code lines excluding comments and blank lines. Measured using AST parsing.", interpretation: "Lower is often better for maintainability. Industry average: 10,000-50,000 LOC per project." },
+  todos: { title: "TODOs/FIXMEs/HACKs", description: "Count of TODO, FIXME, and HACK comments in the codebase indicating pending work or technical shortcuts.", interpretation: "Lower is better. High counts may indicate incomplete features or deferred refactoring." },
+  avgComplexity: { title: "Average Cyclomatic Complexity", description: "Average complexity across all functions. Measures the number of independent paths through code.", interpretation: "1-5: Simple, 6-10: Moderate, 11-20: Complex, 21+: Very Complex. Lower is better for maintainability." },
+  debtScore: { title: "Technical Debt Score", description: "Composite score calculated from TODOs (×5), complexity (×2), and LOC (÷1000). Higher scores indicate more technical debt.", interpretation: "<50: Low debt, 50-100: Moderate, 100-200: High, 200+: Critical. Lower is better." },
+  totalFunctions: { title: "Total Functions", description: "Total count of all functions and methods across the codebase including Python functions, JS/TS functions, arrow functions, and class methods.", interpretation: "Indicates codebase size and modularity. No strict good/bad threshold." },
+  filesAnalyzed: { title: "Files Analyzed", description: "Number of source code files successfully parsed and analyzed (.py, .js, .ts, .java).", interpretation: "Should match expected file count. Lower than expected may indicate parsing issues." },
+  maxComplexity: { title: "Maximum Complexity", description: "Highest cyclomatic complexity value found in any single function.", interpretation: "Values >20 indicate functions that should be refactored. Ideal: <10" },
+  minComplexity: { title: "Minimum Complexity", description: "Lowest cyclomatic complexity value found in any single function.", interpretation: "Usually 1 for simple functions. Indicates simplest code unit." },
+  totalFiles: { title: "Total Files", description: "Total number of source code files included in dependency analysis.", interpretation: "Indicates project size. More files require better organization." },
+  depFunctions: { title: "External Dependencies", description: "Count of third-party libraries and external modules imported by the codebase from npm, PyPI, Maven, etc.", interpretation: "Monitor for security and maintenance. Each dependency is a potential risk vector. Fewer dependencies = less complexity." },
+  classes: { title: "Total Classes", description: "Number of class definitions found across the codebase.", interpretation: "Indicates OOP usage. Higher doesn't mean better - depends on design approach." },
+  circularDeps: { title: "Circular Dependencies", description: "Number of circular dependency chains detected where files depend on each other in a cycle.", interpretation: "0 is ideal. Any circular dependencies should be refactored to prevent maintenance issues." },
+  excludeThirdParty: { title: "Exclude Third-Party Libraries", description: "When enabled, excludes common third-party library directories (node_modules, venv, site-packages, vendor, etc.) from analysis. On the 'Dependencies' tab, this also hides externally imported libraries.", interpretation: "Enable to focus on your code. Note: Most repos .gitignore these folders, so 'Code Metrics' (like LOC) may not change. The 'Dependencies' tab will still update to hide/show external imports." },
+  excludeTests: { title: "Exclude Test Files", description: "When enabled, excludes files matching common test patterns (e.g., _test.py, .spec.js, test_*, tests/) from all analysis.", interpretation: "Enable this to focus on your application's production code and get a cleaner dependency graph. Disable to include tests in the metrics." },
+  duplicatePairs: { title: "Duplicate Pairs Found", description: "Number of pairs of files found that are considered duplicates based on content similarity (default threshold: 85%).", interpretation: "Uses MinHash (datasketch) to find Jaccard similarity. High numbers of duplicates can indicate copy-paste code and poor abstraction." },
+  duplicationFilesAnalyzed: { title: "Files Analyzed for Duplication", description: "Number of files processed by the duplication engine.", interpretation: "This number may match 'Files Analyzed' in Code Metrics, depending on exclusions." }
 };
 
 // --- Tooltip Component ---
-// (Moved here as requested in the previous turn)
 function Tooltip({ info, children, position = 'right' }) {
   const [show, setShow] = useState(false);
-
-  const getPositionClasses = () => {
-    if (position === 'left') return 'right-full mr-3 top-1/2 -translate-y-1/2';
-    return 'left-full ml-3 top-1/2 -translate-y-1/2';
-  };
-  const getArrowClasses = () => {
-    if (position === 'left') return '-right-1.5 top-1/2 -translate-y-1/2';
-    return '-left-1.5 top-1/2 -translate-y-1/2';
-  };
-
+  const getPositionClasses = () => { /* ... */ if (position === 'left') return 'right-full mr-3 top-1/2 -translate-y-1/2'; return 'left-full ml-3 top-1/2 -translate-y-1/2'; };
+  const getArrowClasses = () => { /* ... */ if (position === 'left') return '-right-1.5 top-1/2 -translate-y-1/2'; return '-left-1.5 top-1/2 -translate-y-1/2'; };
   return (
     <div className="relative inline-block">
-      <div onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)} className="cursor-help">
-        {children}
-      </div>
+      <div onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)} className="cursor-help"> {children} </div>
       {show && (
         <div className={`absolute z-50 w-80 p-4 bg-slate-900 text-white rounded-lg shadow-xl pointer-events-none ${getPositionClasses()}`}>
           <div className={`absolute w-3 h-3 bg-slate-900 transform rotate-45 ${getArrowClasses()}`}></div>
@@ -124,12 +50,19 @@ function Tooltip({ info, children, position = 'right' }) {
   );
 }
 
-// --- NEW: Graph Info for Tooltip ---
+// --- Graph Info ---
 const GRAPH_INFO = {
     title: "Dependency Graph Guide",
     description: "Visualizes file relationships. Nodes are colored by parent folder. Blue nodes = files, Green = external libraries, Orange = functions/classes. Solid blue lines = 'imports' relationship. Dashed orange lines = 'defines' relationship (function/class defined in file).",
     interpretation: "Look for clusters of related files (modularity) and circular dependencies. High connectivity might indicate tight coupling."
-}
+};
+
+// --- NEW: Dependency List Info ---
+const DEPENDENCY_LIST_INFO = {
+    title: "Understanding Dependency Counts",
+    description: "'Most Dependent Files' lists files that import *many* others (high out-degree). 'Most Depended On Files' lists files imported *by many* others (high in-degree).",
+    interpretation: "A file can have dependencies (out-degree > 0) but 0 dependents (in-degree = 0) if it's an entry point (like a main script) or if the files importing it were excluded (e.g., test files when 'Exclude Tests' is on)."
+};
 
 // --- MAIN APP COMPONENT ---
 export default function RefractorIQDashboard() {
@@ -147,49 +80,34 @@ export default function RefractorIQDashboard() {
   const BACKEND_URL = 'https://fluffy-fortnight-pjr95546qg936qrg-8000.app.github.dev';
 
   // --- Polling and Analyze Functions (unchanged) ---
-  const pollJobStatus = async (currentJobId) => {
+  const pollJobStatus = async (currentJobId) => { /* ... */
     try {
-      const statusUrl = `/analyze/status/${currentJobId}`;
-      const response = await fetch(`${BACKEND_URL}${statusUrl}`);
-      if (!response.ok) throw new Error("Failed to get job status");
-      const data = await response.json();
+      const statusUrl = `/analyze/status/${currentJobId}`; const response = await fetch(`${BACKEND_URL}${statusUrl}`);
+      if (!response.ok) throw new Error("Failed to get job status"); const data = await response.json();
       setJobStatus(data.status);
       if (data.status === "COMPLETED") {
-        setIsPolling(false); setJobId(null); setJobStatus(null);
-        clearInterval(pollIntervalRef.current);
-        const resultsUrl = data.results_url;
-        const resultsResponse = await fetch(`${BACKEND_URL}${resultsUrl}`);
+        setIsPolling(false); setJobId(null); setJobStatus(null); clearInterval(pollIntervalRef.current);
+        const resultsUrl = data.results_url; const resultsResponse = await fetch(`${BACKEND_URL}${resultsUrl}`);
         if (!resultsResponse.ok) throw new Error("Failed to fetch final results");
-        const resultsData = await resultsResponse.json();
-        setAnalysisData(resultsData); setLoading(false);
+        const resultsData = await resultsResponse.json(); setAnalysisData(resultsData); setLoading(false);
       } else if (data.status === "FAILED") {
-        setIsPolling(false); setJobId(null); setJobStatus(null);
-        clearInterval(pollIntervalRef.current);
+        setIsPolling(false); setJobId(null); setJobStatus(null); clearInterval(pollIntervalRef.current);
         setError(data.error || "Analysis job failed"); setLoading(false);
       }
-    } catch (err) { /* ... error handling ... */
-      console.error("Polling error:", err); setIsPolling(false);
-      clearInterval(pollIntervalRef.current); setError(err.message || "Polling error");
-      setLoading(false);
-    }
+    } catch (err) { console.error("Polling error:", err); setIsPolling(false); clearInterval(pollIntervalRef.current); setError(err.message || "Polling error"); setLoading(false); }
   };
-  useEffect(() => { /* ... polling interval logic ... */
-    if (isPolling && jobId) {
-      pollJobStatus(jobId);
-      pollIntervalRef.current = setInterval(() => { pollJobStatus(jobId); }, 5000);
-    }
+  useEffect(() => { /* ... */
+    if (isPolling && jobId) { pollJobStatus(jobId); pollIntervalRef.current = setInterval(() => { pollJobStatus(jobId); }, 5000); }
     return () => { if (pollIntervalRef.current) clearInterval(pollIntervalRef.current); };
   }, [isPolling, jobId]);
-  const analyzeRepo = async () => { /* ... analyze repo logic ... */
+  const analyzeRepo = async () => { /* ... */
     if (!repoUrl.trim()) { setError('Please enter a repository URL'); return; }
-    setLoading(true); setError(null); setAnalysisData(null); setJobId(null);
-    setJobStatus(null); setIsPolling(false); setActiveTab('metrics');
-    if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
+    setLoading(true); setError(null); setAnalysisData(null); setJobId(null); setJobStatus(null);
+    setIsPolling(false); setActiveTab('metrics'); if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
     try {
       const response = await fetch(`${BACKEND_URL}/analyze/full?repo_url=${encodeURIComponent(repoUrl)}&exclude_third_party=${excludeThirdParty}&exclude_tests=${excludeTests}`);
       if (!response.ok) { const errData = await response.json(); throw new Error(errData.error || 'Failed to start analysis'); }
-      const data = await response.json();
-      setJobId(data.job_id); setJobStatus("PENDING"); setIsPolling(true);
+      const data = await response.json(); setJobId(data.job_id); setJobStatus("PENDING"); setIsPolling(true);
     } catch (err) { console.error("Error starting analysis:", err); setError(err.message || 'Failed to start analysis'); setLoading(false); }
   };
 
@@ -226,7 +144,7 @@ export default function RefractorIQDashboard() {
             {/* --- TABS Container --- */}
             <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
               {/* Tab Buttons (unchanged) */}
-              <div className="flex border-b border-slate-200">
+              <div className="flex border-b border-slate-200"> {/* ... */}
                  <button onClick={() => setActiveTab('metrics')} className={`flex-1 px-6 py-4 font-medium transition-colors ${activeTab === 'metrics' ? 'bg-blue-50 text-blue-600 border-b-2 border-blue-600' : 'text-slate-600 hover:bg-slate-50'}`}>Code Metrics</button>
                  <button onClick={() => setActiveTab('dependencies')} className={`flex-1 px-6 py-4 font-medium transition-colors ${activeTab === 'dependencies' ? 'bg-blue-50 text-blue-600 border-b-2 border-blue-600' : 'text-slate-600 hover:bg-slate-50'}`}>Dependencies</button>
                  <button onClick={() => setActiveTab('graph')} className={`flex items-center justify-center gap-2 flex-1 px-6 py-4 font-medium transition-colors ${activeTab === 'graph' ? 'bg-blue-50 text-blue-600 border-b-2 border-blue-600' : 'text-slate-600 hover:bg-slate-50'}`}><Share2 className="w-4 h-4" />Dependency Graph</button>
@@ -237,16 +155,53 @@ export default function RefractorIQDashboard() {
               <div className="p-6">
                 {/* Metrics Tab (unchanged) */}
                 {activeTab === 'metrics' && ( /* ... */
-                    <div className="space-y-6"> <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"> <MetricCard icon={<FileCode className="w-5 h-5" />} label="Lines of Code" value={normalizeValue(analysisData?.code_metrics?.LOC, 'loc')} color="blue" info={METRIC_INFO.loc} /> <MetricCard icon={<AlertCircle className="w-5 h-5" />} label="TODOs/FIXMEs" value={normalizeValue(analysisData?.code_metrics?.TODOs_FIXME_HACK)} color="yellow" info={METRIC_INFO.todos} /> <MetricCard icon={<TrendingUp className="w-5 h-5" />} label="Avg Complexity" value={normalizeValue(analysisData?.code_metrics?.AvgCyclomaticComplexity)} color="purple" info={METRIC_INFO.avgComplexity} /> <MetricCard icon={<Zap className="w-5 h-5" />} label="Debt Score" value={normalizeValue(analysisData?.code_metrics?.DebtScore)} color="red" badge={getDebtScoreColor(analysisData?.code_metrics?.DebtScore)} info={METRIC_INFO.debtScore} tooltipPosition="left" /> </div> <div className="grid grid-cols-1 md:grid-cols-2 gap-6"> <div className="bg-slate-50 rounded-lg p-5 border border-slate-200"> <h3 className="font-semibold text-slate-800 mb-4">Function Analysis</h3> <div className="space-y-3"> <InfoRow label="Total Functions" value={normalizeValue(analysisData?.code_metrics?.TotalFunctions)} info={METRIC_INFO.totalFunctions} /> <InfoRow label="Files Analyzed" value={normalizeValue(analysisData?.code_metrics?.FilesAnalyzed)} info={METRIC_INFO.filesAnalyzed} /> <InfoRow label="Max Complexity" value={normalizeValue(analysisData?.code_metrics?.MaxComplexity)} valueClass={getComplexityColor(analysisData?.code_metrics?.MaxComplexity)} info={METRIC_INFO.maxComplexity} /> <InfoRow label="Min Complexity" value={normalizeValue(analysisData?.code_metrics?.MinComplexity)} valueClass={getComplexityColor(analysisData?.code_metrics?.MinComplexity)} info={METRIC_INFO.minComplexity} /> </div> </div> <div className="bg-slate-50 rounded-lg p-5 border border-slate-200"> <h3 className="font-semibold text-slate-800 mb-4">Complexity Distribution</h3> <div className="space-y-3"> <ComplexityBar label="Low (1-5)" value={analysisData?.code_metrics?.ComplexityDistribution?.low ?? 0} total={analysisData?.code_metrics?.TotalFunctions ?? 0} color="bg-green-500" /> <ComplexityBar label="Medium (6-10)" value={analysisData?.code_metrics?.ComplexityDistribution?.medium ?? 0} total={analysisData?.code_metrics?.TotalFunctions ?? 0} color="bg-yellow-500" /> <ComplexityBar label="High (11-20)" value={analysisData?.code_metrics?.ComplexityDistribution?.high ?? 0} total={analysisData?.code_metrics?.TotalFunctions ?? 0} color="bg-orange-500" /> <ComplexityBar label="Very High (21+)" value={analysisData?.code_metrics?.ComplexityDistribution?.very_high ?? 0} total={analysisData?.code_metrics?.TotalFunctions ?? 0} color="bg-red-500" /> </div> </div> </div> </div>
+                  <div className="space-y-6"> <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"> <MetricCard icon={<FileCode className="w-5 h-5" />} label="Lines of Code" value={normalizeValue(analysisData?.code_metrics?.LOC, 'loc')} color="blue" info={METRIC_INFO.loc} /> <MetricCard icon={<AlertCircle className="w-5 h-5" />} label="TODOs/FIXMEs" value={normalizeValue(analysisData?.code_metrics?.TODOs_FIXME_HACK)} color="yellow" info={METRIC_INFO.todos} /> <MetricCard icon={<TrendingUp className="w-5 h-5" />} label="Avg Complexity" value={normalizeValue(analysisData?.code_metrics?.AvgCyclomaticComplexity)} color="purple" info={METRIC_INFO.avgComplexity} /> <MetricCard icon={<Zap className="w-5 h-5" />} label="Debt Score" value={normalizeValue(analysisData?.code_metrics?.DebtScore)} color="red" badge={getDebtScoreColor(analysisData?.code_metrics?.DebtScore)} info={METRIC_INFO.debtScore} tooltipPosition="left" /> </div> <div className="grid grid-cols-1 md:grid-cols-2 gap-6"> <div className="bg-slate-50 rounded-lg p-5 border border-slate-200"> <h3 className="font-semibold text-slate-800 mb-4">Function Analysis</h3> <div className="space-y-3"> <InfoRow label="Total Functions" value={normalizeValue(analysisData?.code_metrics?.TotalFunctions)} info={METRIC_INFO.totalFunctions} /> <InfoRow label="Files Analyzed" value={normalizeValue(analysisData?.code_metrics?.FilesAnalyzed)} info={METRIC_INFO.filesAnalyzed} /> <InfoRow label="Max Complexity" value={normalizeValue(analysisData?.code_metrics?.MaxComplexity)} valueClass={getComplexityColor(analysisData?.code_metrics?.MaxComplexity)} info={METRIC_INFO.maxComplexity} /> <InfoRow label="Min Complexity" value={normalizeValue(analysisData?.code_metrics?.MinComplexity)} valueClass={getComplexityColor(analysisData?.code_metrics?.MinComplexity)} info={METRIC_INFO.minComplexity} /> </div> </div> <div className="bg-slate-50 rounded-lg p-5 border border-slate-200"> <h3 className="font-semibold text-slate-800 mb-4">Complexity Distribution</h3> <div className="space-y-3"> <ComplexityBar label="Low (1-5)" value={analysisData?.code_metrics?.ComplexityDistribution?.low ?? 0} total={analysisData?.code_metrics?.TotalFunctions ?? 0} color="bg-green-500" /> <ComplexityBar label="Medium (6-10)" value={analysisData?.code_metrics?.ComplexityDistribution?.medium ?? 0} total={analysisData?.code_metrics?.TotalFunctions ?? 0} color="bg-yellow-500" /> <ComplexityBar label="High (11-20)" value={analysisData?.code_metrics?.ComplexityDistribution?.high ?? 0} total={analysisData?.code_metrics?.TotalFunctions ?? 0} color="bg-orange-500" /> <ComplexityBar label="Very High (21+)" value={analysisData?.code_metrics?.ComplexityDistribution?.very_high ?? 0} total={analysisData?.code_metrics?.TotalFunctions ?? 0} color="bg-red-500" /> </div> </div> </div> </div>
                 )}
-                {/* Dependencies Tab (unchanged) */}
-                {activeTab === 'dependencies' && ( /* ... */
-                  <div className="space-y-6"> <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"> <MetricCard icon={<FileCode className="w-5 h-5" />} label="Total Files" value={normalizeValue(analysisData?.dependency_metrics?.total_files)} color="blue" info={METRIC_INFO.totalFiles} /> <MetricCard icon={<GitBranch className="w-5 h-5" />} label="External Dependencies" value={normalizeValue(analysisData?.dependency_metrics?.total_external_dependencies)} color="green" info={METRIC_INFO.depFunctions} /> <MetricCard icon={<GitBranch className="w-5 h-5" />} label="Classes" value={normalizeValue(analysisData?.dependency_metrics?.total_classes)} color="purple" info={METRIC_INFO.classes} /> <MetricCard icon={<AlertCircle className="w-5 h-5" />} label="Circular Dependencies" value={normalizeValue(analysisData?.dependency_metrics?.circular_dependencies)} color="red" info={METRIC_INFO.circularDeps} tooltipPosition="left" /> </div> {(analysisData?.dependency_metrics?.most_dependent_files?.length ?? 0) > 0 && ( <div className="bg-slate-50 rounded-lg p-5 border border-slate-200"> <h3 className="font-semibold text-slate-800 mb-4">Most Dependent Files</h3> <div className="space-y-2 max-h-96 overflow-y-auto"> {analysisData.dependency_metrics.most_dependent_files.map((item, idx) => ( <div key={idx} className="flex justify-between items-center p-3 bg-white rounded border border-slate-200"> <span className="text-sm text-slate-700 font-mono truncate flex-1" title={item.file}>{item.file}</span> <span className="ml-3 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium whitespace-nowrap">{item.dependencies} deps</span> </div> ))} </div> </div> )} {(analysisData?.dependency_metrics?.most_depended_on_files?.length ?? 0) > 0 && ( <div className="bg-slate-50 rounded-lg p-5 border border-slate-200"> <h3 className="font-semibold text-slate-800 mb-4">Most Depended On Files</h3> <div className="space-y-2 max-h-96 overflow-y-auto"> {analysisData.dependency_metrics.most_depended_on_files.map((item, idx) => ( <div key={idx} className="flex justify-between items-center p-3 bg-white rounded border border-slate-200"> <span className="text-sm text-slate-700 font-mono truncate flex-1" title={item.file}>{item.file}</span> <span className="ml-3 px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium whitespace-nowrap">{item.dependents} dependents</span> </div> ))} </div> </div> )} </div>
+
+                {/* --- DEPENDENCIES TAB (MODIFIED) --- */}
+                {activeTab === 'dependencies' && (
+                  <div className="space-y-6">
+                    {/* Metric Cards (unchanged) */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"> {/* ... */}
+                      <MetricCard icon={<FileCode className="w-5 h-5" />} label="Total Files" value={normalizeValue(analysisData?.dependency_metrics?.total_files)} color="blue" info={METRIC_INFO.totalFiles} /> <MetricCard icon={<GitBranch className="w-5 h-5" />} label="External Dependencies" value={normalizeValue(analysisData?.dependency_metrics?.total_external_dependencies)} color="green" info={METRIC_INFO.depFunctions} /> <MetricCard icon={<GitBranch className="w-5 h-5" />} label="Classes" value={normalizeValue(analysisData?.dependency_metrics?.total_classes)} color="purple" info={METRIC_INFO.classes} /> <MetricCard icon={<AlertCircle className="w-5 h-5" />} label="Circular Dependencies" value={normalizeValue(analysisData?.dependency_metrics?.circular_dependencies)} color="red" info={METRIC_INFO.circularDeps} tooltipPosition="left" />
+                    </div>
+
+                    {/* Most Dependent Files (unchanged) */}
+                    {(analysisData?.dependency_metrics?.most_dependent_files?.length ?? 0) > 0 && ( /* ... */
+                      <div className="bg-slate-50 rounded-lg p-5 border border-slate-200"> <h3 className="font-semibold text-slate-800 mb-4">Most Dependent Files</h3> <div className="space-y-2 max-h-96 overflow-y-auto"> {analysisData.dependency_metrics.most_dependent_files.map((item, idx) => ( <div key={idx} className="flex justify-between items-center p-3 bg-white rounded border border-slate-200"> <span className="text-sm text-slate-700 font-mono truncate flex-1" title={item.file}>{item.file}</span> <span className="ml-3 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium whitespace-nowrap">{item.dependencies} deps</span> </div> ))} </div> </div>
+                    )}
+
+                    {/* Most Depended On Files (MODIFIED - Added Tooltip) */}
+                    {(analysisData?.dependency_metrics?.most_depended_on_files?.length ?? 0) > 0 && (
+                       <div className="bg-slate-50 rounded-lg p-5 border border-slate-200">
+                        {/* --- ADDED TOOLTIP WRAPPER --- */}
+                        <div className="flex items-center gap-2 mb-4">
+                            <h3 className="font-semibold text-slate-800">Most Depended On Files</h3>
+                            <Tooltip info={DEPENDENCY_LIST_INFO} position="right">
+                                <Info className="w-4 h-4 text-slate-400 hover:text-slate-600 transition-colors" />
+                            </Tooltip>
+                        </div>
+                        {/* --- END TOOLTIP WRAPPER --- */}
+                        <div className="space-y-2 max-h-96 overflow-y-auto">
+                          {analysisData.dependency_metrics.most_depended_on_files.map((item, idx) => (
+                            <div key={idx} className="flex justify-between items-center p-3 bg-white rounded border border-slate-200">
+                              <span className="text-sm text-slate-700 font-mono truncate flex-1" title={item.file}>{item.file}</span>
+                              <span className="ml-3 px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium whitespace-nowrap">
+                                {item.dependents} dependents
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 )}
-                {/* Graph Tab */}
+                {/* --- END DEPENDENCIES TAB MODIFICATION --- */}
+
+
+                {/* Graph Tab (unchanged from previous update) */}
                 {activeTab === 'graph' && (
                   <div className="relative w-full h-[600px] bg-slate-50 rounded-lg border border-slate-200">
-                     {/* --- INFO BUTTON ADDED --- */}
                      <div className="absolute top-3 right-3 z-10">
                         <Tooltip info={GRAPH_INFO} position="left">
                             <button className="p-2 bg-white/80 backdrop-blur-sm rounded-full shadow border border-slate-300 hover:bg-slate-100 transition-colors">
@@ -254,8 +209,6 @@ export default function RefractorIQDashboard() {
                             </button>
                         </Tooltip>
                     </div>
-                    {/* --- END INFO BUTTON --- */}
-
                     <ReactFlowProvider>
                       {analysisData?.dependency_metrics?.graph_json ? (
                         <DependencyGraph graphData={analysisData.dependency_metrics.graph_json} />
@@ -265,6 +218,7 @@ export default function RefractorIQDashboard() {
                     </ReactFlowProvider>
                   </div>
                 )}
+
                 {/* Duplication Tab (unchanged) */}
                 {activeTab === 'duplication' && ( /* ... */
                    <div className="space-y-6"> <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"> <MetricCard icon={<CopyCheck className="w-5 h-5" />} label="Duplicate Pairs Found" value={normalizeValue(analysisData?.duplication_metrics?.duplicate_pairs_found)} color="yellow" info={METRIC_INFO.duplicatePairs} /> <MetricCard icon={<FileCode className="w-5 h-5" />} label="Files Analyzed" value={normalizeValue(analysisData?.duplication_metrics?.files_analyzed)} color="blue" info={METRIC_INFO.duplicationFilesAnalyzed} /> </div> {analysisData?.duplication_metrics?.error && ( <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3"> <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" /> <p className="text-red-800">Duplication analysis failed: {analysisData.duplication_metrics.error}</p> </div> )} {(analysisData?.duplication_metrics?.duplicates?.length ?? 0) > 0 && ( <div className="bg-slate-50 rounded-lg p-5 border border-slate-200"> <h3 className="font-semibold text-slate-800 mb-4">Duplicate File Pairs (Threshold: {(analysisData?.duplication_metrics?.similarity_threshold ?? 0) * 100}%)</h3> <div className="space-y-2 max-h-96 overflow-y-auto"> {analysisData.duplication_metrics.duplicates.map((item, idx) => ( <DuplicatePairRow key={idx} item={item} /> ))} </div> </div> )} {(!analysisData?.duplication_metrics || (analysisData?.duplication_metrics?.duplicates?.length ?? 0) === 0) && !analysisData?.duplication_metrics?.error && ( <div className="text-center p-6 bg-slate-50 rounded-lg border border-slate-200"> <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-3" /> <h4 className="font-semibold text-slate-700">No Duplicates Found</h4> <p className="text-sm text-slate-500">No file pairs met the {(analysisData?.duplication_metrics?.similarity_threshold ?? 0) * 100}% similarity threshold.</p> </div> )} </div>

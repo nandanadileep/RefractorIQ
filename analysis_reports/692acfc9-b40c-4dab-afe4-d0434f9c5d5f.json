@@ -1,0 +1,223 @@
+{
+  "repository": "https://github.com/Zer0-Official/Simpl-Py.git",
+  "code_metrics": {
+    "LOC": 514,
+    "TODOs_FIXME_HACK": 0,
+    "AvgCyclomaticComplexity": 9.92,
+    "DebtScore": 20.35,
+    "TotalFunctions": 13,
+    "MaxComplexity": 29,
+    "MinComplexity": 2,
+    "FilesAnalyzed": 2,
+    "ComplexityDistribution": {
+      "low": 4,
+      "medium": 6,
+      "high": 1,
+      "very_high": 2
+    }
+  },
+  "dependency_metrics": {
+    "total_files": 2,
+    "total_functions": 13,
+    "total_classes": 0,
+    "total_external_dependencies": 0,
+    "total_edges": 13,
+    "average_connections_per_node": 1.73,
+    "most_dependent_files": [
+      {
+        "file": "Simpl.py",
+        "dependencies": 12
+      },
+      {
+        "file": "src/mod/SPY_module.py",
+        "dependencies": 1
+      }
+    ],
+    "most_depended_on_files": [
+      {
+        "file": "Simpl.py",
+        "dependents": 0
+      },
+      {
+        "file": "src/mod/SPY_module.py",
+        "dependents": 0
+      }
+    ],
+    "circular_dependencies": 0,
+    "circular_dependency_chains": [],
+    "graph_density": 0.0619,
+    "graph_json": {
+      "directed": true,
+      "multigraph": false,
+      "graph": {},
+      "nodes": [
+        {
+          "type": "file",
+          "language": ".py",
+          "id": "Simpl.py"
+        },
+        {
+          "type": "function",
+          "name": "tokenizer",
+          "file": "Simpl.py",
+          "id": "Simpl.py::tokenizer"
+        },
+        {
+          "type": "function",
+          "name": "find_handler",
+          "file": "Simpl.py",
+          "id": "Simpl.py::find_handler"
+        },
+        {
+          "type": "function",
+          "name": "error",
+          "file": "Simpl.py",
+          "id": "Simpl.py::error"
+        },
+        {
+          "type": "function",
+          "name": "system_info_disp",
+          "file": "Simpl.py",
+          "id": "Simpl.py::system_info_disp"
+        },
+        {
+          "type": "function",
+          "name": "welcome_disp",
+          "file": "Simpl.py",
+          "id": "Simpl.py::welcome_disp"
+        },
+        {
+          "type": "function",
+          "name": "mod_handler",
+          "file": "Simpl.py",
+          "id": "Simpl.py::mod_handler"
+        },
+        {
+          "type": "function",
+          "name": "print_handler",
+          "file": "Simpl.py",
+          "id": "Simpl.py::print_handler"
+        },
+        {
+          "type": "function",
+          "name": "slash_handler",
+          "file": "Simpl.py",
+          "id": "Simpl.py::slash_handler"
+        },
+        {
+          "type": "function",
+          "name": "txt_handler",
+          "file": "Simpl.py",
+          "id": "Simpl.py::txt_handler"
+        },
+        {
+          "type": "function",
+          "name": "var_handler",
+          "file": "Simpl.py",
+          "id": "Simpl.py::var_handler"
+        },
+        {
+          "type": "function",
+          "name": "call_handler",
+          "file": "Simpl.py",
+          "id": "Simpl.py::call_handler"
+        },
+        {
+          "type": "function",
+          "name": "main",
+          "file": "Simpl.py",
+          "id": "Simpl.py::main"
+        },
+        {
+          "type": "file",
+          "language": ".py",
+          "id": "src/mod/SPY_module.py"
+        },
+        {
+          "type": "function",
+          "name": "init",
+          "file": "src/mod/SPY_module.py",
+          "id": "src/mod/SPY_module.py::init"
+        }
+      ],
+      "links": [
+        {
+          "relationship": "defines",
+          "source": "Simpl.py",
+          "target": "Simpl.py::tokenizer"
+        },
+        {
+          "relationship": "defines",
+          "source": "Simpl.py",
+          "target": "Simpl.py::find_handler"
+        },
+        {
+          "relationship": "defines",
+          "source": "Simpl.py",
+          "target": "Simpl.py::error"
+        },
+        {
+          "relationship": "defines",
+          "source": "Simpl.py",
+          "target": "Simpl.py::system_info_disp"
+        },
+        {
+          "relationship": "defines",
+          "source": "Simpl.py",
+          "target": "Simpl.py::welcome_disp"
+        },
+        {
+          "relationship": "defines",
+          "source": "Simpl.py",
+          "target": "Simpl.py::mod_handler"
+        },
+        {
+          "relationship": "defines",
+          "source": "Simpl.py",
+          "target": "Simpl.py::print_handler"
+        },
+        {
+          "relationship": "defines",
+          "source": "Simpl.py",
+          "target": "Simpl.py::slash_handler"
+        },
+        {
+          "relationship": "defines",
+          "source": "Simpl.py",
+          "target": "Simpl.py::txt_handler"
+        },
+        {
+          "relationship": "defines",
+          "source": "Simpl.py",
+          "target": "Simpl.py::var_handler"
+        },
+        {
+          "relationship": "defines",
+          "source": "Simpl.py",
+          "target": "Simpl.py::call_handler"
+        },
+        {
+          "relationship": "defines",
+          "source": "Simpl.py",
+          "target": "Simpl.py::main"
+        },
+        {
+          "relationship": "defines",
+          "source": "src/mod/SPY_module.py",
+          "target": "src/mod/SPY_module.py::init"
+        }
+      ]
+    }
+  },
+  "duplication_metrics": {
+    "files_analyzed": 2,
+    "duplicate_pairs_found": 0,
+    "similarity_threshold": 0.85,
+    "shingle_size_k": 5,
+    "duplicates": []
+  },
+  "analysis_method": "Tree-sitter AST + NetworkX + MinHash (Async - Local Storage)",
+  "excluded_third_party": true,
+  "excluded_tests": true,
+  "analysis_errors": []
+}

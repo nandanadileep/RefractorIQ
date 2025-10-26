@@ -1,0 +1,332 @@
+{
+  "repository": "https://github.com/Vinicius-PR/Python-Projects.git",
+  "code_metrics": {
+    "LOC": 381,
+    "TODOs_FIXME_HACK": 0,
+    "AvgCyclomaticComplexity": 3.28,
+    "DebtScore": 6.94,
+    "TotalFunctions": 18,
+    "MaxComplexity": 10,
+    "MinComplexity": 1,
+    "FilesAnalyzed": 8,
+    "ComplexityDistribution": {
+      "low": 14,
+      "medium": 4,
+      "high": 0,
+      "very_high": 0
+    }
+  },
+  "dependency_metrics": {
+    "total_files": 8,
+    "total_functions": 18,
+    "total_classes": 0,
+    "total_external_dependencies": 0,
+    "total_edges": 18,
+    "average_connections_per_node": 1.38,
+    "most_dependent_files": [
+      {
+        "file": "Games/TicTacToe/tictactoe.py",
+        "dependencies": 10
+      },
+      {
+        "file": "Numbers/Quadratic Equation/Quadratic Equation.py",
+        "dependencies": 7
+      },
+      {
+        "file": "Text/Count Words/count words.py",
+        "dependencies": 1
+      },
+      {
+        "file": "Text/FizzBuzz/fizzbuzz.py",
+        "dependencies": 0
+      },
+      {
+        "file": "Text/Reverse String/Reverse.py",
+        "dependencies": 0
+      }
+    ],
+    "most_depended_on_files": [
+      {
+        "file": "Text/FizzBuzz/fizzbuzz.py",
+        "dependents": 0
+      },
+      {
+        "file": "Text/Reverse String/Reverse.py",
+        "dependents": 0
+      },
+      {
+        "file": "Text/Palindrome/Palindrome.py",
+        "dependents": 0
+      },
+      {
+        "file": "Text/Count Words/count words.py",
+        "dependents": 0
+      },
+      {
+        "file": "Text/Count Vowels/Count Vowels.py",
+        "dependents": 0
+      }
+    ],
+    "circular_dependencies": 0,
+    "circular_dependency_chains": [],
+    "graph_density": 0.0277,
+    "graph_json": {
+      "directed": true,
+      "multigraph": false,
+      "graph": {},
+      "nodes": [
+        {
+          "type": "file",
+          "language": ".py",
+          "id": "Text/FizzBuzz/fizzbuzz.py"
+        },
+        {
+          "type": "file",
+          "language": ".py",
+          "id": "Text/Reverse String/Reverse.py"
+        },
+        {
+          "type": "file",
+          "language": ".py",
+          "id": "Text/Palindrome/Palindrome.py"
+        },
+        {
+          "type": "file",
+          "language": ".py",
+          "id": "Text/Count Words/count words.py"
+        },
+        {
+          "type": "function",
+          "name": "count_words",
+          "file": "Text/Count Words/count words.py",
+          "id": "Text/Count Words/count words.py::count_words"
+        },
+        {
+          "type": "file",
+          "language": ".py",
+          "id": "Text/Count Vowels/Count Vowels.py"
+        },
+        {
+          "type": "file",
+          "language": ".py",
+          "id": "Numbers/Fibonacci sequence/Fibonacci.py"
+        },
+        {
+          "type": "file",
+          "language": ".py",
+          "id": "Numbers/Quadratic Equation/Quadratic Equation.py"
+        },
+        {
+          "type": "function",
+          "name": "welcome",
+          "file": "Numbers/Quadratic Equation/Quadratic Equation.py",
+          "id": "Numbers/Quadratic Equation/Quadratic Equation.py::welcome"
+        },
+        {
+          "type": "function",
+          "name": "ask_for_value",
+          "file": "Numbers/Quadratic Equation/Quadratic Equation.py",
+          "id": "Numbers/Quadratic Equation/Quadratic Equation.py::ask_for_value"
+        },
+        {
+          "type": "function",
+          "name": "calculate_delta",
+          "file": "Numbers/Quadratic Equation/Quadratic Equation.py",
+          "id": "Numbers/Quadratic Equation/Quadratic Equation.py::calculate_delta"
+        },
+        {
+          "type": "function",
+          "name": "calculate_roots",
+          "file": "Numbers/Quadratic Equation/Quadratic Equation.py",
+          "id": "Numbers/Quadratic Equation/Quadratic Equation.py::calculate_roots"
+        },
+        {
+          "type": "function",
+          "name": "calculate_vertices",
+          "file": "Numbers/Quadratic Equation/Quadratic Equation.py",
+          "id": "Numbers/Quadratic Equation/Quadratic Equation.py::calculate_vertices"
+        },
+        {
+          "type": "function",
+          "name": "check_route",
+          "file": "Numbers/Quadratic Equation/Quadratic Equation.py",
+          "id": "Numbers/Quadratic Equation/Quadratic Equation.py::check_route"
+        },
+        {
+          "type": "function",
+          "name": "get_formula",
+          "file": "Numbers/Quadratic Equation/Quadratic Equation.py",
+          "id": "Numbers/Quadratic Equation/Quadratic Equation.py::get_formula"
+        },
+        {
+          "type": "file",
+          "language": ".py",
+          "id": "Games/TicTacToe/tictactoe.py"
+        },
+        {
+          "type": "function",
+          "name": "display_board",
+          "file": "Games/TicTacToe/tictactoe.py",
+          "id": "Games/TicTacToe/tictactoe.py::display_board"
+        },
+        {
+          "type": "function",
+          "name": "welcome",
+          "file": "Games/TicTacToe/tictactoe.py",
+          "id": "Games/TicTacToe/tictactoe.py::welcome"
+        },
+        {
+          "type": "function",
+          "name": "ask_marker",
+          "file": "Games/TicTacToe/tictactoe.py",
+          "id": "Games/TicTacToe/tictactoe.py::ask_marker"
+        },
+        {
+          "type": "function",
+          "name": "check_win",
+          "file": "Games/TicTacToe/tictactoe.py",
+          "id": "Games/TicTacToe/tictactoe.py::check_win"
+        },
+        {
+          "type": "function",
+          "name": "check_full",
+          "file": "Games/TicTacToe/tictactoe.py",
+          "id": "Games/TicTacToe/tictactoe.py::check_full"
+        },
+        {
+          "type": "function",
+          "name": "place_marker",
+          "file": "Games/TicTacToe/tictactoe.py",
+          "id": "Games/TicTacToe/tictactoe.py::place_marker"
+        },
+        {
+          "type": "function",
+          "name": "check_whitespace",
+          "file": "Games/TicTacToe/tictactoe.py",
+          "id": "Games/TicTacToe/tictactoe.py::check_whitespace"
+        },
+        {
+          "type": "function",
+          "name": "ask_input",
+          "file": "Games/TicTacToe/tictactoe.py",
+          "id": "Games/TicTacToe/tictactoe.py::ask_input"
+        },
+        {
+          "type": "function",
+          "name": "get_random",
+          "file": "Games/TicTacToe/tictactoe.py",
+          "id": "Games/TicTacToe/tictactoe.py::get_random"
+        },
+        {
+          "type": "function",
+          "name": "play_again",
+          "file": "Games/TicTacToe/tictactoe.py",
+          "id": "Games/TicTacToe/tictactoe.py::play_again"
+        }
+      ],
+      "links": [
+        {
+          "relationship": "defines",
+          "source": "Text/Count Words/count words.py",
+          "target": "Text/Count Words/count words.py::count_words"
+        },
+        {
+          "relationship": "defines",
+          "source": "Numbers/Quadratic Equation/Quadratic Equation.py",
+          "target": "Numbers/Quadratic Equation/Quadratic Equation.py::welcome"
+        },
+        {
+          "relationship": "defines",
+          "source": "Numbers/Quadratic Equation/Quadratic Equation.py",
+          "target": "Numbers/Quadratic Equation/Quadratic Equation.py::ask_for_value"
+        },
+        {
+          "relationship": "defines",
+          "source": "Numbers/Quadratic Equation/Quadratic Equation.py",
+          "target": "Numbers/Quadratic Equation/Quadratic Equation.py::calculate_delta"
+        },
+        {
+          "relationship": "defines",
+          "source": "Numbers/Quadratic Equation/Quadratic Equation.py",
+          "target": "Numbers/Quadratic Equation/Quadratic Equation.py::calculate_roots"
+        },
+        {
+          "relationship": "defines",
+          "source": "Numbers/Quadratic Equation/Quadratic Equation.py",
+          "target": "Numbers/Quadratic Equation/Quadratic Equation.py::calculate_vertices"
+        },
+        {
+          "relationship": "defines",
+          "source": "Numbers/Quadratic Equation/Quadratic Equation.py",
+          "target": "Numbers/Quadratic Equation/Quadratic Equation.py::check_route"
+        },
+        {
+          "relationship": "defines",
+          "source": "Numbers/Quadratic Equation/Quadratic Equation.py",
+          "target": "Numbers/Quadratic Equation/Quadratic Equation.py::get_formula"
+        },
+        {
+          "relationship": "defines",
+          "source": "Games/TicTacToe/tictactoe.py",
+          "target": "Games/TicTacToe/tictactoe.py::display_board"
+        },
+        {
+          "relationship": "defines",
+          "source": "Games/TicTacToe/tictactoe.py",
+          "target": "Games/TicTacToe/tictactoe.py::welcome"
+        },
+        {
+          "relationship": "defines",
+          "source": "Games/TicTacToe/tictactoe.py",
+          "target": "Games/TicTacToe/tictactoe.py::ask_marker"
+        },
+        {
+          "relationship": "defines",
+          "source": "Games/TicTacToe/tictactoe.py",
+          "target": "Games/TicTacToe/tictactoe.py::check_win"
+        },
+        {
+          "relationship": "defines",
+          "source": "Games/TicTacToe/tictactoe.py",
+          "target": "Games/TicTacToe/tictactoe.py::check_full"
+        },
+        {
+          "relationship": "defines",
+          "source": "Games/TicTacToe/tictactoe.py",
+          "target": "Games/TicTacToe/tictactoe.py::place_marker"
+        },
+        {
+          "relationship": "defines",
+          "source": "Games/TicTacToe/tictactoe.py",
+          "target": "Games/TicTacToe/tictactoe.py::check_whitespace"
+        },
+        {
+          "relationship": "defines",
+          "source": "Games/TicTacToe/tictactoe.py",
+          "target": "Games/TicTacToe/tictactoe.py::ask_input"
+        },
+        {
+          "relationship": "defines",
+          "source": "Games/TicTacToe/tictactoe.py",
+          "target": "Games/TicTacToe/tictactoe.py::get_random"
+        },
+        {
+          "relationship": "defines",
+          "source": "Games/TicTacToe/tictactoe.py",
+          "target": "Games/TicTacToe/tictactoe.py::play_again"
+        }
+      ]
+    }
+  },
+  "duplication_metrics": {
+    "files_analyzed": 8,
+    "duplicate_pairs_found": 0,
+    "similarity_threshold": 0.85,
+    "shingle_size_k": 5,
+    "duplicates": []
+  },
+  "analysis_method": "Tree-sitter AST + NetworkX + MinHash (Async - Local Storage)",
+  "excluded_third_party": true,
+  "excluded_tests": true,
+  "analysis_errors": []
+}
