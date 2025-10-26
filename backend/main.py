@@ -219,6 +219,64 @@ def get_analysis_results(job_id: uuid.UUID, db: Session = Depends(get_db)):
 
 
 # ---------------- Sync Analysis Endpoints (Deprecated) ---------------- #
+try:
+    search_model = SentenceTransformer('all-MiniLM-L6-v2')
+    print("Search model loaded successfully.")
+except Exception as e:
+    search_model = None
+    print(f"Warning: Failed to load SentenceTransformer model on startup: {e}")
+
+@app.get("/analyze/results/{job_id}/search")
+def search_analysis_results(job_id: uuid.UUID, q: str = Query(..., min_length=3), k: int = Query(5, ge=1, le=20)):
+    """Searches the indexed code content for a completed job."""
+    if not search_model:
+        raise HTTPException(status_code=503, detail="Search model is not available.")
+
+    # Construct file paths (use convention based on job_id)
+    index_file_path = os.path.join(REPORT_STORAGE_PATH, f"{job_id}_index.faiss")
+    mapping_file_path = os.path.join(REPORT_STORAGE_PATH, f"{job_id}_mapping.pkl")
+
+    # Check if index and mapping files exist
+    if not os.path.exists(index_file_path) or not os.path.exists(mapping_file_path):
+        print(f"Search failed: Index or mapping file not found for job {job_id}")
+        raise HTTPException(status_code=404, detail="Search index not found for this job.")
+
+    try:
+        # Load index and mapping
+        print(f"Loading index for job {job_id} from {index_file_path}")
+        index = faiss.read_index(index_file_path)
+        print(f"Loading mapping for job {job_id} from {mapping_file_path}")
+        with open(mapping_file_path, 'rb') as f:
+            mapping = pickle.load(f)
+
+        # Generate query embedding
+        print(f"Generating embedding for query: '{q}'")
+        query_vector = search_model.encode([q], normalize_embeddings=True)
+        query_vector_np = np.array(query_vector).astype('float32')
+
+        # Perform search
+        print(f"Searching index for top {k} results...")
+        distances, indices = index.search(query_vector_np, k) # D, I
+
+        # Map results
+        results = []
+        if len(indices) > 0:
+            for i in range(len(indices[0])):
+                idx = indices[0][i]
+                if idx in mapping: # Check if index is valid in mapping
+                    results.append({
+                        "path": mapping[idx],
+                        "score": float(distances[0][i]) # Cosine similarity score
+                    })
+        print(f"Found {len(results)} results.")
+        return JSONResponse({"query": q, "results": results})
+
+    except FileNotFoundError:
+        # This might happen if files exist check passed but loading failed (race condition?)
+        raise HTTPException(status_code=404, detail="Search index files not found during loading.")
+    except Exception as e:
+        print(f"Error during search for job {job_id}: {traceback.format_exc()}")
+        raise HTTPException(status_code=500, detail=f"Search failed: {str(e)}")
 
 @app.get("/analyze")
 def analyze(

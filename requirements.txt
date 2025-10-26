@@ -16,5 +16,7 @@ celery[redis]
 redis
 SQLAlchemy
 psycopg2-binary
+sentence-transformers
+faiss-cpu
+numpy
 shutil
-# boto3 # REMOVED
