@@ -325,7 +325,6 @@ def simple_debt_score(loc, todos, complexity):
     """Calculate technical debt score"""
     return round((todos * 5 + complexity * 2 + loc / 1000), 2)
 
-# --- UPDATED FOR LLM SUGGESTIONS ---
 def get_detailed_metrics(repo_path, exclude_third_party=True, exclude_tests=True):
     """
     Get detailed code metrics including function count, max complexity, etc.

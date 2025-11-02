@@ -456,7 +456,7 @@ export default function RefractorIQDashboard() {
             <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
               <div className="border-b border-slate-200">
                 <div className="flex">
-                  {['metrics', 'dependencies', 'graph', 'duplication'].map((tab) => (
+                  {['metrics', 'dependencies', 'graph', 'duplication', 'suggestions'].map((tab) => (
                     <button
                       key={tab}
                       onClick={() => setActiveTab(tab)}
@@ -684,7 +684,75 @@ export default function RefractorIQDashboard() {
                   </div>
                 )}
 
-              </div> {/* Closes <div className="p-6"> */}
+                {/* LLM Suggestions Tab */}
+                {activeTab === 'suggestions' && (
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold text-slate-800 flex items-center gap-2">
+                      <BrainCircuit className="w-5 h-5" />
+                      AI Refactoring Suggestions
+                    </h3>
+                    
+                    {analysisData.llm_suggestions && analysisData.llm_suggestions.length > 0 ? (
+                      <div className="space-y-6">
+                        {analysisData.llm_suggestions.map((suggestion, idx) => (
+                          <div key={idx} className="bg-white rounded-lg border border-slate-200 overflow-hidden">
+                            {/* Header */}
+                            <div className="bg-gradient-to-r from-purple-50 to-blue-50 p-4 border-b border-slate-200">
+                              <div className="flex items-start justify-between">
+                                <div className="flex-1">
+                                  <h4 className="font-semibold text-slate-800 mb-1">
+                                    {suggestion.function_name}
+                                  </h4>
+                                  <p className="text-sm text-slate-600 font-mono mb-2">
+                                    {suggestion.file_path}
+                                  </p>
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-xs px-2 py-1 bg-red-100 text-red-800 rounded-full font-medium">
+                                      Complexity: {suggestion.complexity}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            {/* Original Code */}
+                            <div className="p-4 bg-slate-50 border-b border-slate-200">
+                              <div className="flex items-center gap-2 mb-2">
+                                <FileCode className="w-4 h-4 text-slate-600" />
+                                <h5 className="text-sm font-semibold text-slate-700">Original Code</h5>
+                              </div>
+                              <pre className="text-xs bg-white p-3 rounded border border-slate-200 overflow-x-auto">
+                                <code className="text-slate-800">{suggestion.original_code}</code>
+                              </pre>
+                            </div>
+                            
+                            {/* AI Suggestion */}
+                            <div className="p-4">
+                              <div className="flex items-center gap-2 mb-2">
+                                <BrainCircuit className="w-4 h-4 text-purple-600" />
+                                <h5 className="text-sm font-semibold text-slate-700">AI Suggestion</h5>
+                              </div>
+                              <div className="prose prose-sm max-w-none bg-purple-50 p-3 rounded border border-purple-200">
+                                <pre className="whitespace-pre-wrap text-slate-800 text-xs">
+                                  {suggestion.suggestion}
+                                </pre>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center py-12 bg-slate-50 rounded-lg border border-slate-200">
+                        <BrainCircuit className="w-12 h-12 text-slate-400 mx-auto mb-3" />
+                        <p className="text-slate-600 font-medium">No AI suggestions available</p>
+                        <p className="text-sm text-slate-500 mt-1">
+                          Either no complex functions were found, or LLM analysis was disabled.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
+                </div> {/* Closes <div className="p-6"> */}
             </div> {/* Closes <div className="bg-white rounded-xl ..."> */}
           </div> /* Closes <div className="mt-6 space-y-6"> */
         )} {/* Closes {analysisData && !loading && ( */}
