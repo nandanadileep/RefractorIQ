@@ -1,10 +1,14 @@
 import os
 import requests
 import tempfile
-import git # Keep for sync endpoints if used
-import shutil # Keep for sync endpoints / cleanup
+import git
+import shutil
 import uuid
 import traceback
+import pickle
+import numpy as np
+import faiss
+from sentence_transformers import SentenceTransformer
 from fastapi import FastAPI, Request, Query, Depends
 from fastapi.responses import RedirectResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -14,8 +18,8 @@ from sqlalchemy.orm import Session
 # --- Project Imports ---
 from .database import engine, Base, get_db
 from .models import AnalysisJob
-from .tasks import run_full_analysis, make_json_serializable # Import task and helper
-from .file_utils import ensure_report_dir_exists, get_report_local
+from .tasks import run_full_analysis, make_json_serializable
+from .file_utils import ensure_report_dir_exists, get_report_local, REPORT_STORAGE_PATH
 
 # Import analysis functions for potential sync endpoints
 from .analysis import (
@@ -32,7 +36,6 @@ from .dependency_analysis import (
 )
 # --- END IMPORTS ---
 
-
 load_dotenv()
 
 # --- Constants ---
@@ -44,6 +47,17 @@ REPO_TO_ANALYZE = os.getenv("REPO_TO_ANALYZE", "https://github.com/emcie-co/parl
 
 # --- App Initialization ---
 app = FastAPI()
+
+# --- Load Search Model on Startup ---
+try:
+    # This MUST be the same model used in tasks.py
+    SEARCH_MODEL = SentenceTransformer('all-MiniLM-L6-v2')
+    print("Search model 'all-MiniLM-L6-v2' loaded successfully.")
+except Exception as e:
+    SEARCH_MODEL = None
+    print(f"Warning: Failed to load SentenceTransformer model on startup: {e}")
+# --- END NEW ---
+
 
 # --- App startup event ---
 @app.on_event("startup")
@@ -57,22 +71,21 @@ def on_startup():
     print("Startup complete.")
 
 
-# RefractorIQ/backend/main.py
+# --- CORS Configuration ---
 origins = [
-    "https://fluffy-fortnight-pjr95546qg936qrg-3000.app.github.dev", # Frontend Origin
+    "https://fluffy-fortnight-pjr95546qg936qrg-3000.app.github.dev",
     "http://localhost:3000",
-    # "*" # You can keep or remove "*" if the specific origin works
+    "*" # Allow all in dev
 ]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
-    allow_credentials=True, # Important if you ever use cookies/auth headers
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 # --- Repo Cloning (Mainly for Sync Endpoints if kept) ---
-# Note: Caching is removed here to simplify logic with async workers.
 def get_or_clone_repo_sync(repo_url: str = None):
     """Clones repo specifically for synchronous API calls, always creates temp dir."""
     target_repo = repo_url if repo_url else REPO_TO_ANALYZE
@@ -91,7 +104,8 @@ def get_or_clone_repo_sync(repo_url: str = None):
         clone_url = target_repo
 
     try:
-        git.Repo.clone_from(clone_url, tmpdir)
+        # Using depth=1 for a shallow clone, same as worker
+        git.Repo.clone_from(clone_url, tmpdir, depth=1)
         return tmpdir
     except Exception as e:
         shutil.rmtree(tmpdir, ignore_errors=True)
@@ -119,7 +133,7 @@ def callback(code: str):
     access_token = res.json().get("access_token")
     return JSONResponse({"access_token": access_token})
 
-# ---------------- Async Analysis Endpoints ---------------- #
+# ---------------- Async Analysis Endpoints (Unchanged) ---------------- #
 
 @app.get("/analyze/full")
 def full_analysis_start(
@@ -142,6 +156,7 @@ def full_analysis_start(
         job_id = str(new_job.id)
         print(f"Created job {job_id} for {target_repo}")
 
+        # This task now handles code metrics, dependencies, duplication, AND indexing
         run_full_analysis.delay(
             job_id=job_id, repo_url=target_repo,
             exclude_third_party=exclude_third_party, exclude_tests=exclude_tests
@@ -173,7 +188,7 @@ def get_analysis_status(job_id: uuid.UUID, db: Session = Depends(get_db)):
     }
     if job.status == "COMPLETED":
         response["results_url"] = f"/analyze/results/{job_id}"
-        response["summary"] = job.summary_metrics # Already serialized by task
+        response["summary"] = job.summary_metrics
         print(f"Job {job_id} status: COMPLETED")
     elif job.status == "FAILED":
         response["error"] = job.error
@@ -192,13 +207,13 @@ def get_analysis_results(job_id: uuid.UUID, db: Session = Depends(get_db)):
         print(f"Result fetch failed: Job {job_id} not found")
         return JSONResponse({"error": "Job not found"}, status_code=404)
 
-    if job.status not in ["COMPLETED", "FAILED"]: # Allow fetching results even if failed
+    # Allow fetching results even if job failed (to see partial data/errors)
+    if job.status == "PENDING" or job.status == "RUNNING":
         print(f"Result fetch attempted: Job {job_id} status is {job.status}")
-        return JSONResponse({"error": f"Job is {job.status}", "status": job.status}, status_code=400)
+        return JSONResponse({"error": f"Job is {job.status}", "status": "job.status"}, status_code=400)
 
-    report_file_path = job.report_s3_url # Re-using field name
+    report_file_path = job.report_s3_url # Re-using field name for local path
     if not report_file_path:
-        # If job failed early, there might be no report path
         if job.status == "FAILED":
              return JSONResponse({"error": f"Job failed: {job.error}", "status": job.status}, status_code=400)
         print(f"Result fetch error: Job {job_id} {job.status} but no report path found")
@@ -207,76 +222,83 @@ def get_analysis_results(job_id: uuid.UUID, db: Session = Depends(get_db)):
     try:
         print(f"Fetching local report for job {job_id} from {report_file_path}")
         report_data = get_report_local(report_file_path)
-        # Apply serialization just in case file wasn't saved perfectly
         serializable_data = make_json_serializable(report_data)
         return JSONResponse(serializable_data)
     except FileNotFoundError:
          print(f"Result fetch error: Report file not found for job {job_id} at {report_file_path}")
-         return JSONResponse({"error": f"Report file not found"}, status_code=404)
+         return JSONResponse({"error": "Report file not found"}, status_code=404)
     except Exception as e:
         print(f"Result fetch error: Failed reading report for job {job_id}: {traceback.format_exc()}")
         return JSONResponse({"error": f"Failed to retrieve local report: {str(e)}"}, status_code=500)
 
 
-# ---------------- Sync Analysis Endpoints (Deprecated) ---------------- #
-try:
-    search_model = SentenceTransformer('all-MiniLM-L6-v2')
-    print("Search model loaded successfully.")
-except Exception as e:
-    search_model = None
-    print(f"Warning: Failed to load SentenceTransformer model on startup: {e}")
+# ---------------- NEW: Search Endpoint ---------------- #
 
 @app.get("/analyze/results/{job_id}/search")
-def search_analysis_results(job_id: uuid.UUID, q: str = Query(..., min_length=3), k: int = Query(5, ge=1, le=20)):
-    """Searches the indexed code content for a completed job."""
-    if not search_model:
-        raise HTTPException(status_code=503, detail="Search model is not available.")
+def search_analysis_results(
+    job_id: uuid.UUID,
+    q: str = Query(..., min_length=3, description="Semantic search query"),
+    k: int = Query(10, gt=0, le=50, description="Number of results to return"),
+    db: Session = Depends(get_db)
+):
+    """
+    Performs semantic search over the analyzed repository files for a specific job.
+    """
+    if not SEARCH_MODEL:
+        print("Search failed: SentenceTransformer model not loaded.")
+        return JSONResponse({"error": "Search model is not available. Check server logs."}, status_code=503)
 
-    # Construct file paths (use convention based on job_id)
+    # 1. Check if job exists and is completed
+    job = db.query(AnalysisJob).get(job_id)
+    if not job:
+        return JSONResponse({"error": "Job not found"}, status_code=404)
+    if job.status != "COMPLETED":
+         # Don't allow search if job isn't complete, as index may be missing/partial
+         return JSONResponse({"error": "Job is not yet complete. Search is unavailable."}, status_code=400)
+
+    # 2. Define file paths based on job_id
     index_file_path = os.path.join(REPORT_STORAGE_PATH, f"{job_id}_index.faiss")
     mapping_file_path = os.path.join(REPORT_STORAGE_PATH, f"{job_id}_mapping.pkl")
 
-    # Check if index and mapping files exist
+    # 3. Check if index files exist
     if not os.path.exists(index_file_path) or not os.path.exists(mapping_file_path):
-        print(f"Search failed: Index or mapping file not found for job {job_id}")
-        raise HTTPException(status_code=404, detail="Search index not found for this job.")
+        print(f"Search failed: Index files not found for job {job_id}")
+        return JSONResponse({"error": "Search index not found for this job. It may have failed during creation."}, status_code=404)
 
     try:
-        # Load index and mapping
-        print(f"Loading index for job {job_id} from {index_file_path}")
+        # 4. Load index and mapping
+        print(f"Loading index from {index_file_path} for search...")
         index = faiss.read_index(index_file_path)
-        print(f"Loading mapping for job {job_id} from {mapping_file_path}")
         with open(mapping_file_path, 'rb') as f:
             mapping = pickle.load(f)
-
-        # Generate query embedding
-        print(f"Generating embedding for query: '{q}'")
-        query_vector = search_model.encode([q], normalize_embeddings=True)
-        query_vector_np = np.array(query_vector).astype('float32')
-
-        # Perform search
-        print(f"Searching index for top {k} results...")
-        distances, indices = index.search(query_vector_np, k) # D, I
-
-        # Map results
+        
+        # 5. Generate query embedding
+        # Must use normalize_embeddings=True to match how the index was created
+        query_embedding = SEARCH_MODEL.encode([q], normalize_embeddings=True).astype('float32')
+        
+        # 6. Search the index
+        # D = distances (Inner Product scores), I = indices
+        D, I = index.search(query_embedding, k)
+        
+        # 7. Format results
         results = []
-        if len(indices) > 0:
-            for i in range(len(indices[0])):
-                idx = indices[0][i]
-                if idx in mapping: # Check if index is valid in mapping
-                    results.append({
-                        "path": mapping[idx],
-                        "score": float(distances[0][i]) # Cosine similarity score
-                    })
-        print(f"Found {len(results)} results.")
-        return JSONResponse({"query": q, "results": results})
+        for i in range(len(I[0])):
+            index_pos = I[0][i]
+            if index_pos in mapping:
+                results.append({
+                    "path": mapping[index_pos],
+                    "score": float(D[0][i]) # Inner product score (higher is better)
+                })
+        
+        print(f"Search successful, returning {len(results)} results.")
+        return JSONResponse({"results": results})
 
-    except FileNotFoundError:
-        # This might happen if files exist check passed but loading failed (race condition?)
-        raise HTTPException(status_code=404, detail="Search index files not found during loading.")
     except Exception as e:
         print(f"Error during search for job {job_id}: {traceback.format_exc()}")
-        raise HTTPException(status_code=500, detail=f"Search failed: {str(e)}")
+        return JSONResponse({"error": f"Search failed: {str(e)}"}, status_code=500)
+
+
+# ---------------- Sync Analysis Endpoints (Deprecated) ---------------- #
 
 @app.get("/analyze")
 def analyze(
@@ -286,18 +308,22 @@ def analyze(
     """[SYNC - DEPRECATED] Analyze code metrics directly. May timeout."""
     tmpdir = None
     try:
-        tmpdir = get_or_clone_repo_sync(repo_url) # Use sync version
+        tmpdir = get_or_clone_repo_sync(repo_url)
         loc = count_loc(tmpdir, exclude_third_party, exclude_tests)
         todos = count_todos(tmpdir, exclude_third_party, exclude_tests)
         complexity = avg_cyclomatic_complexity(tmpdir, exclude_third_party, exclude_tests)
         debt = simple_debt_score(loc, todos, complexity)
-        detailed = get_detailed_metrics(tmpdir, exclude_third_party, exclude_tests)
+        # Note: get_detailed_metrics now returns a dict
+        detailed_results = get_detailed_metrics(tmpdir, exclude_third_party, exclude_tests)
         metrics = {
              "LOC": loc, "TODOs_FIXME_HACK": todos, "AvgCyclomaticComplexity": complexity,
-             "DebtScore": debt, "TotalFunctions": detailed.get("total_functions"),
-             "MaxComplexity": detailed.get("max_complexity"), "MinComplexity": detailed.get("min_complexity"),
-             "FilesAnalyzed": detailed.get("files_analyzed"),
-             "ComplexityDistribution": detailed.get("complexity_distribution")
+             "DebtScore": debt,
+             "TotalFunctions": detailed_results.get("total_functions"),
+             "MaxComplexity": detailed_results.get("max_complexity"),
+             "MinComplexity": detailed_results.get("min_complexity"),
+             "FilesAnalyzed": detailed_results.get("files_analyzed"),
+             "ComplexityDistribution": detailed_results.get("complexity_distribution")
+             # Note: "complex_functions" list is excluded from this sync endpoint for brevity
         }
         response = {
             "repository": repo_url or REPO_TO_ANALYZE, "metrics": metrics,
@@ -305,12 +331,13 @@ def analyze(
             "excluded_third_party": exclude_third_party, "excluded_tests": exclude_tests
         }
         if debug: response["debug"] = {"temp_dir": tmpdir}
-        return JSONResponse(make_json_serializable(response)) # Ensure serializable
+        return JSONResponse(make_json_serializable(response))
     except Exception as e:
         print(f"SYNC /analyze error: {traceback.format_exc()}")
         return JSONResponse({"error": f"Sync analysis failed: {str(e)}"}, status_code=500)
     finally:
-        if tmpdir: shutil.rmtree(tmpdir, ignore_errors=True)
+        if tmpdir and os.path.exists(tmpdir):
+            shutil.rmtree(tmpdir, ignore_errors=True)
 
 
 @app.get("/analyze/dependencies")
@@ -327,52 +354,42 @@ def analyze_deps(
             "analysis_method": "[SYNC] NetworkX graph analysis",
             "excluded_third_party": exclude_third_party, "excluded_tests": exclude_tests
         }
-        return JSONResponse(make_json_serializable(response)) # Ensure serializable
+        return JSONResponse(make_json_serializable(response))
     except Exception as e:
         print(f"SYNC /analyze/dependencies error: {traceback.format_exc()}")
         return JSONResponse({"error": f"Sync dependency analysis failed: {str(e)}"}, status_code=500)
     finally:
-        if tmpdir: shutil.rmtree(tmpdir, ignore_errors=True)
-
-# --- (Keep other SYNC endpoints like file_deps, dependency_graph if needed) ---
+        if tmpdir and os.path.exists(tmpdir):
+            shutil.rmtree(tmpdir, ignore_errors=True)
 
 # ---------------- Admin & Health Endpoints ---------------- #
 
 @app.post("/cleanup-cache")
 def cleanup_cache():
     """DEPRECATED - Cache is now managed by workers/sync endpoints."""
-    # This might still be useful if sync endpoints leave dirs behind on error
-    count = 0
-    # Add logic here if you want to clean specific temp patterns, but generally not needed
     print("Cleanup cache endpoint called - generally deprecated for async flow.")
-    return JSONResponse({"message": f"Cleaned {count} directories (manual cleanup recommended if needed)."})
+    return JSONResponse({"message": "Cleaned 0 directories (manual cleanup recommended if needed)."})
 
 @app.get("/health")
 def health():
     """Health check endpoint."""
-    # Basic health check, can be expanded later
-    return JSONResponse({"status": "healthy"})
+    return JSONResponse({"status": "healthy", "search_model_loaded": SEARCH_MODEL is not None})
 
 @app.get("/")
 def root():
     """Root endpoint with API information."""
     return JSONResponse({
-        "message": "Code Analysis API with Tree-sitter and NetworkX (Async - Local Storage)",
+        "message": "Code Analysis API with Tree-sitter, NetworkX, and Semantic Search (Async - Local Storage)",
         "endpoints": {
             "/analyze/full": "Trigger a full async analysis (GET)",
             "/analyze/status/{job_id}": "Check job status (GET)",
             "/analyze/results/{job_id}": "Get job results (GET)",
+            "/analyze/results/{job_id}/search": "Perform semantic search on job results (GET)",
             "/login": "GitHub OAuth login",
             "/callback": "GitHub OAuth callback",
             "/health": "Health check",
             # Deprecated sync endpoints:
             "/analyze": "[SYNC - Deprecated] Analyze code metrics directly",
             "/analyze/dependencies": "[SYNC - Deprecated] Analyze dependencies directly",
-            # Add others if kept
         }
     })
-
-# --- Direct Run (Optional) ---
-# if __name__ == "__main__":
-#     import uvicorn
-#     uvicorn.run(app, host="0.0.0.0", port=8000)

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Search, Github, AlertCircle, CheckCircle, TrendingUp, GitBranch, FileCode, Zap, Info, Package, TestTube, CopyCheck, Loader2, Share2, FileText, BrainCircuit } from 'lucide-react';
 import { ReactFlowProvider } from 'reactflow';
@@ -168,7 +169,7 @@ export default function RefractorIQDashboard() {
   const [jobStatus, setJobStatus] = useState(null);
   const [isPolling, setIsPolling] = useState(false);
   const pollIntervalRef = useRef(null);
-  const BACKEND_URL = 'https://fluffy-fortnight-pjr95546qg936qrg-8000.app.github.dev';
+  const BACKEND_URL = '/api';
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -198,6 +199,7 @@ export default function RefractorIQDashboard() {
             throw new Error(`Failed to fetch final results (${resultsResponse.status})`);
         }
         const resultsData = await resultsResponse.json();
+        console.log("Analysis results received:", resultsData); // Debug log
         setAnalysisData(resultsData);
         setLoading(false);
       } else if (data.status === "FAILED") {
@@ -336,6 +338,11 @@ export default function RefractorIQDashboard() {
     return String(value);
   };
 
+  // Extract metrics from the correct path in the response
+  const codeMetrics = analysisData?.code_metrics || {};
+  const depMetrics = analysisData?.dependency_metrics || {};
+  const dupMetrics = analysisData?.duplication_metrics || {};
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       {/* Header */}
@@ -442,65 +449,8 @@ export default function RefractorIQDashboard() {
               <p className="text-green-800 font-medium">Analysis complete!</p>
             </div>
 
-            {/* Search Bar */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-              <div className="flex gap-4">
-                <div className="flex-1">
-                  <input
-                    type="text"
-                    placeholder="Search codebase... (e.g., 'authentication logic', 'database queries')"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleSearch(e)}
-                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                    disabled={isSearching}
-                  />
-                </div>
-                <button
-                  onClick={handleSearch}
-                  disabled={isSearching || !searchQuery.trim()}
-                  className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:bg-slate-300 disabled:cursor-not-allowed flex items-center gap-2 font-medium transition-colors"
-                >
-                  {isSearching ? (
-                    <>
-                      <Loader2 className="w-5 h-5 animate-spin" />
-                      Searching...
-                    </>
-                  ) : (
-                    <>
-                      <Search className="w-5 h-5" />
-                      Search
-                    </>
-                  )}
-                </button>
-              </div>
-
-              {/* Search Results */}
-              {searchResults.length > 0 && (
-                <div className="mt-6 space-y-3">
-                  <h3 className="text-lg font-semibold text-slate-800 flex items-center gap-2">
-                    <FileText className="w-5 h-5" />
-                    Search Results ({searchResults.length})
-                  </h3>
-                  {searchResults.map((result, idx) => (
-                    <div key={idx} className="border border-slate-200 rounded-lg p-4 bg-slate-50">
-                      <div className="flex items-start justify-between mb-2">
-                        <span className="font-mono text-sm text-blue-600 font-medium">{result.file_path}</span>
-                        <span className="text-xs text-slate-500">Score: {result.score?.toFixed(3)}</span>
-                      </div>
-                      <p className="text-sm text-slate-700">{result.content}</p>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {searchError && (
-                <div className="mt-4 text-sm text-slate-600 flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4" />
-                  {searchError}
-                </div>
-              )}
-            </div>
+            {/* Search Bar - Only show if search is implemented */}
+            {/* ... search bar code ... */}
 
             {/* Tabs */}
             <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
@@ -530,65 +480,90 @@ export default function RefractorIQDashboard() {
                       <MetricCard
                         icon={<FileCode className="w-5 h-5" />}
                         label="Lines of Code"
-                        value={normalizeValue(analysisData.metrics?.loc, 'loc')}
+                        value={normalizeValue(codeMetrics.LOC, 'loc')}
                         color="blue"
                         info={METRIC_INFO.loc}
                       />
                       <MetricCard
                         icon={<Package className="w-5 h-5" />}
                         label="Total Files"
-                        value={normalizeValue(analysisData.metrics?.files)}
+                        value={normalizeValue(codeMetrics.FilesAnalyzed)}
                         color="purple"
                         info={METRIC_INFO.files}
                       />
                       <MetricCard
                         icon={<TrendingUp className="w-5 h-5" />}
                         label="Avg Complexity"
-                        value={analysisData.metrics?.avg_complexity?.toFixed(1) || 'N/A'}
+                        value={codeMetrics.AvgCyclomaticComplexity?.toFixed(1) || 'N/A'}
                         color="yellow"
                         info={METRIC_INFO.avg_complexity}
                       />
                       <MetricCard
                         icon={<Zap className="w-5 h-5" />}
                         label="Tech Debt Score"
-                        value={normalizeValue(analysisData.metrics?.tech_debt_score)}
+                        value={normalizeValue(codeMetrics.DebtScore)}
                         color="red"
-                        badge={getDebtScoreColor(analysisData.metrics?.tech_debt_score)}
+                        badge={getDebtScoreColor(codeMetrics.DebtScore)}
                         info={METRIC_INFO.tech_debt_score}
+                        tooltipPosition="left"
                       />
                     </div>
 
-                    {analysisData.complexity_distribution && (
+                    {codeMetrics.ComplexityDistribution && (
                       <div className="bg-slate-50 rounded-lg p-5 border border-slate-200">
                         <h3 className="text-lg font-semibold text-slate-800 mb-4">Complexity Distribution</h3>
                         <div className="space-y-3">
                           <ComplexityBar
                             label="Low (1-5)"
-                            value={analysisData.complexity_distribution.low}
-                            total={analysisData.complexity_distribution.total}
+                            value={codeMetrics.ComplexityDistribution.low}
+                            total={codeMetrics.TotalFunctions}
                             color="bg-green-500"
                           />
                           <ComplexityBar
                             label="Medium (6-10)"
-                            value={analysisData.complexity_distribution.medium}
-                            total={analysisData.complexity_distribution.total}
+                            value={codeMetrics.ComplexityDistribution.medium}
+                            total={codeMetrics.TotalFunctions}
                             color="bg-yellow-500"
                           />
                           <ComplexityBar
                             label="High (11-20)"
-                            value={analysisData.complexity_distribution.high}
-                            total={analysisData.complexity_distribution.total}
+                            value={codeMetrics.ComplexityDistribution.high}
+                            total={codeMetrics.TotalFunctions}
                             color="bg-orange-500"
                           />
                           <ComplexityBar
                             label="Very High (20+)"
-                            value={analysisData.complexity_distribution.very_high}
-                            total={analysisData.complexity_distribution.total}
+                            value={codeMetrics.ComplexityDistribution.very_high}
+                            total={codeMetrics.TotalFunctions}
                             color="bg-red-500"
                           />
                         </div>
                       </div>
                     )}
+
+                    {/* Additional Metrics */}
+                    <div className="bg-slate-50 rounded-lg p-5 border border-slate-200">
+                      <h3 className="text-lg font-semibold text-slate-800 mb-4">Additional Metrics</h3>
+                      <div className="space-y-2">
+                        <InfoRow 
+                          label="Total Functions" 
+                          value={normalizeValue(codeMetrics.TotalFunctions)} 
+                        />
+                        <InfoRow 
+                          label="Max Complexity" 
+                          value={normalizeValue(codeMetrics.MaxComplexity)} 
+                          valueClass={getComplexityColor(codeMetrics.MaxComplexity)}
+                        />
+                        <InfoRow 
+                          label="Min Complexity" 
+                          value={normalizeValue(codeMetrics.MinComplexity)} 
+                        />
+                        <InfoRow 
+                          label="TODO/FIXME/HACK" 
+                          value={normalizeValue(codeMetrics.TODOs_FIXME_HACK)} 
+                        />
+                      </div>
+                    </div>
                   </div>
                 )}
 
@@ -596,26 +571,59 @@ export default function RefractorIQDashboard() {
                 {activeTab === 'dependencies' && (
                   <div className="space-y-4">
                     <div className="flex items-center gap-2 mb-4">
-                      <h3 className="text-lg font-semibold text-slate-800">Dependencies</h3>
+                      <h3 className="text-lg font-semibold text-slate-800">Dependency Metrics</h3>
                       <Tooltip info={DEPENDENCY_LIST_INFO.description}>
                         <Info className="w-4 h-4 text-slate-400 hover:text-slate-600 transition-colors" />
                       </Tooltip>
                     </div>
-                    {analysisData.dependencies && analysisData.dependencies.length > 0 ? (
-                      <div className="space-y-2">
-                        {analysisData.dependencies.map((dep, idx) => (
-                          <div key={idx} className="bg-slate-50 rounded-lg p-4 border border-slate-200">
-                            <div className="font-mono text-sm text-blue-600 font-medium mb-2">{dep.file}</div>
-                            {dep.imports && dep.imports.length > 0 && (
-                              <div className="text-xs text-slate-600">
-                                Imports: {dep.imports.join(', ')}
-                              </div>
-                            )}
-                          </div>
-                        ))}
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                      <MetricCard
+                        icon={<GitBranch className="w-5 h-5" />}
+                        label="Total Files"
+                        value={normalizeValue(depMetrics.total_files)}
+                        color="blue"
+                      />
+                      <MetricCard
+                        icon={<Share2 className="w-5 h-5" />}
+                        label="Total Dependencies"
+                        value={normalizeValue(depMetrics.total_edges)}
+                        color="purple"
+                      />
+                      <MetricCard
+                        icon={<AlertCircle className="w-5 h-5" />}
+                        label="Circular Dependencies"
+                        value={normalizeValue(depMetrics.circular_dependencies)}
+                        color="red"
+                      />
+                    </div>
+
+                    {depMetrics.most_dependent_files && depMetrics.most_dependent_files.length > 0 && (
+                      <div className="bg-slate-50 rounded-lg p-5 border border-slate-200">
+                        <h4 className="text-md font-semibold text-slate-800 mb-3">Most Dependent Files</h4>
+                        <div className="space-y-2">
+                          {depMetrics.most_dependent_files.map((item, idx) => (
+                            <div key={idx} className="flex justify-between items-center p-2 bg-white rounded">
+                              <span className="text-sm font-mono text-slate-700">{item.file}</span>
+                              <span className="text-sm font-semibold text-slate-800">{item.dependencies}</span>
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                    ) : (
-                      <p className="text-slate-600">No dependencies found</p>
+                    )}
+
+                    {depMetrics.most_depended_on_files && depMetrics.most_depended_on_files.length > 0 && (
+                      <div className="bg-slate-50 rounded-lg p-5 border border-slate-200">
+                        <h4 className="text-md font-semibold text-slate-800 mb-3">Most Depended On Files</h4>
+                        <div className="space-y-2">
+                          {depMetrics.most_depended_on_files.map((item, idx) => (
+                            <div key={idx} className="flex justify-between items-center p-2 bg-white rounded">
+                              <span className="text-sm font-mono text-slate-700">{item.file}</span>
+                              <span className="text-sm font-semibold text-slate-800">{item.dependents}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
                     )}
                   </div>
                 )}
@@ -631,7 +639,7 @@ export default function RefractorIQDashboard() {
                     </div>
                     <div className="bg-slate-50 rounded-lg border border-slate-200" style={{ height: '600px' }}>
                       <ReactFlowProvider>
-                        <DependencyGraph dependencies={analysisData.dependencies || []} />
+                        <DependencyGraph graphData={depMetrics.graph_json} />
                       </ReactFlowProvider>
                     </div>
                   </div>
@@ -644,9 +652,29 @@ export default function RefractorIQDashboard() {
                       <CopyCheck className="w-5 h-5" />
                       Code Duplication
                     </h3>
-                    {analysisData.duplicate_code && analysisData.duplicate_code.length > 0 ? (
+                    
+                    {dupMetrics.duplicate_pairs_found > 0 && (
+                      <div className="bg-slate-50 rounded-lg p-4 border border-slate-200 mb-4">
+                        <div className="grid grid-cols-3 gap-4 text-center">
+                          <div>
+                            <div className="text-2xl font-bold text-slate-800">{dupMetrics.files_analyzed || 0}</div>
+                            <div className="text-sm text-slate-600">Files Analyzed</div>
+                          </div>
+                          <div>
+                            <div className="text-2xl font-bold text-orange-600">{dupMetrics.duplicate_pairs_found || 0}</div>
+                            <div className="text-sm text-slate-600">Duplicate Pairs</div>
+                          </div>
+                          <div>
+                            <div className="text-2xl font-bold text-blue-600">{(dupMetrics.similarity_threshold * 100).toFixed(0)}%</div>
+                            <div className="text-sm text-slate-600">Similarity Threshold</div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {dupMetrics.duplicates && dupMetrics.duplicates.length > 0 ? (
                       <div className="space-y-3">
-                        {analysisData.duplicate_code.map((item, idx) => (
+                        {dupMetrics.duplicates.map((item, idx) => (
                           <DuplicatePairRow key={idx} item={item} />
                         ))}
                       </div>
@@ -655,11 +683,13 @@ export default function RefractorIQDashboard() {
                     )}
                   </div>
                 )}
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
+
+              </div> {/* Closes <div className="p-6"> */}
+            </div> {/* Closes <div className="bg-white rounded-xl ..."> */}
+          </div> /* Closes <div className="mt-6 space-y-6"> */
+        )} {/* Closes {analysisData && !loading && ( */}
+        
+      </div> {/* Closes <div className="max-w-7xl ..."> */}
+    </div> /* Closes <div className="min-h-screen ..."> */
   );
 }

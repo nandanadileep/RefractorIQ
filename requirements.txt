@@ -19,4 +19,4 @@ psycopg2-binary
 sentence-transformers
 faiss-cpu
 numpy
-shutil
+google-generativeai
