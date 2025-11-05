@@ -1,5 +1,4 @@
 # nixpacks=python
-# nixpacks=python
 radon
 cloc
 requests
