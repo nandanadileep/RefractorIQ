@@ -1,3 +1,5 @@
+# nixpacks=python
+# nixpacks=python
 radon
 cloc
 requests
@@ -20,4 +22,3 @@ sentence-transformers
 faiss-cpu
 numpy
 google-generativeai
-nixpacks=python
