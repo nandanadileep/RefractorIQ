@@ -1,14 +1,10 @@
 [phases.setup]
-nixPkgs = ["python310", "postgresql", "redis"]
+nixPkgs = ["python310", "pip", "nodejs"]
 
 [phases.install]
-cmds = ["pip install -r requirements.txt"]
-
-[phases.build]
 cmds = [
-  "cd frontend && npm install && npm run build",
-  "mkdir -p backend/static",
-  "cp -r frontend/dist/* backend/static/"
+  "pip install --upgrade pip",
+  "pip install -r requirements.txt"
 ]
 
 [start]
