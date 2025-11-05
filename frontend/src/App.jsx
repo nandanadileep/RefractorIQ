@@ -169,7 +169,7 @@ export default function RefractorIQDashboard() {
   const [jobStatus, setJobStatus] = useState(null);
   const [isPolling, setIsPolling] = useState(false);
   const pollIntervalRef = useRef(null);
-  const BACKEND_URL = '/api';
+  const BACKEND_URL = '';
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);

@@ -20,3 +20,4 @@ sentence-transformers
 faiss-cpu
 numpy
 google-generativeai
+nixpacks=python

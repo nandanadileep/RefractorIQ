@@ -12,6 +12,8 @@ from sentence_transformers import SentenceTransformer
 from fastapi import FastAPI, Request, Query, Depends
 from fastapi.responses import RedirectResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from dotenv import load_dotenv
 from sqlalchemy.orm import Session
 
@@ -84,6 +86,24 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+frontend_build_path = os.path.join(os.path.dirname(__file__), "static")
+if os.path.exists(frontend_build_path):
+    app.mount("/static", StaticFiles(directory=frontend_build_path), name="static")
+    
+    # Serve index.html for all frontend routes
+    @app.get("/")
+    @app.get("/{full_path:path}")
+    async def serve_frontend(full_path: str = ""):
+        # Don't serve frontend for API routes
+        if full_path.startswith("api/") or full_path.startswith("analyze/"):
+            return {"error": "Not found"}
+        
+        index_path = os.path.join(frontend_build_path, "index.html")
+        if os.path.exists(index_path):
+            return FileResponse(index_path)
+        return {"error": "Frontend not built"}
+
 
 # --- Repo Cloning (Mainly for Sync Endpoints if kept) ---
 def get_or_clone_repo_sync(repo_url: str = None):
